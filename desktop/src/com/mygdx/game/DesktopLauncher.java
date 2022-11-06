@@ -2,8 +2,6 @@ package com.mygdx.game;
 
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
-import com.mygdx.game.MyGdxGame;
-import com.mygdx.game.screens.MainScreen;
 
 // Please note that on macOS your application needs to be started with the -XstartOnFirstThread JVM argument
 public class DesktopLauncher {
@@ -12,7 +10,7 @@ public class DesktopLauncher {
 		//config.setForegroundFPS(60);
 		config.useVsync(false);
 		config.setTitle("TokyoDrift");
-		config.setWindowedMode(1360, 720);
+		config.setWindowedMode(1600, 960);
 		new Lwjgl3Application(new MyGdxGame(), config);
 	}
 }

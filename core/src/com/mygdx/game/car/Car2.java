@@ -4,9 +4,9 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
-public class Car extends Sprite {
-    CarInputProcessor carInputProcessor;
-    static Car ref;
+public class Car2 extends Sprite {
+    CarInputProcessor2 carInputProcessor2;
+    static Car2 ref;
 
     // Constantes do carro
     static float carMaxAcceleration;
@@ -26,9 +26,9 @@ public class Car extends Sprite {
     // Timers do carro
     float timer;
 
-    public Car(Texture img, int i, int i1, int i2, int i3) {
+    public Car2(Texture img, int i, int i1, int i2, int i3) {
         super(img, i, i1, i2, i3);
-        carInputProcessor = new CarInputProcessor(this); //WASD
+        carInputProcessor2 = new CarInputProcessor2(this); //setinhas
 
         this.carMaxAcceleration = 100; // o quanto o carro acelera
         this.carMaxBraking = -300; // o quanto o carro freia
