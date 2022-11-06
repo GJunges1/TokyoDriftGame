@@ -4,9 +4,9 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
 
-public class CarInputProcessor implements InputProcessor {
-    Car car;
-    public CarInputProcessor(Car car){
+public class CarInputProcessor2 implements InputProcessor {
+    Car2 car;
+    public CarInputProcessor2(Car2 car){
         this.car = car;
         Gdx.input.setInputProcessor(this);
     }
@@ -14,18 +14,18 @@ public class CarInputProcessor implements InputProcessor {
     @Override
     public boolean keyDown(int keycode) {
         switch(keycode){
-            case Input.Keys.A:
+            case Input.Keys.LEFT:
                 car.carPressLeft();
                 break;
-            case Input.Keys.D:
+            case Input.Keys.RIGHT:
                 car.carPressRight();
                 break;
             //case Input.Keys.A:
-            case Input.Keys.W:
+            case Input.Keys.UP:
                 car.carSetForward();
                 break;
             //case Input.Keys.Z:
-            case Input.Keys.S:
+            case Input.Keys.DOWN:
                 car.carSetBackwards();
                 break;
         }
@@ -37,14 +37,14 @@ public class CarInputProcessor implements InputProcessor {
         switch(keycode){
             //case Input.Keys.A:
             //case Input.Keys.Z:
-            case Input.Keys.W:
-            case Input.Keys.S:
+            case Input.Keys.UP:
+            case Input.Keys.DOWN:
                 car.carSetIdle();
                 break;
-            case Input.Keys.A:
+            case Input.Keys.LEFT:
                car.carReleaseLeft();
                 break;
-            case Input.Keys.D:
+            case Input.Keys.RIGHT:
                 car.carReleaseRight();
                 break;
         }

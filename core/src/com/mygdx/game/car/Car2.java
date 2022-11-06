@@ -4,31 +4,31 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
-public class Car extends Sprite {
-    CarInputProcessor carInputProcessor;
-    static Car ref;
+public class Car2 extends Sprite {
+    CarInputProcessor2 carInputProcessor2;
+    static Car2 ref;
 
-    // car constraints
+    // Constantes do carro
     static float carMaxAcceleration;
     static float carMaxBraking;
     static float carFriction;
     static float carHandling;
 
-    // car variables
+    // Variáveis do carro
     static float carAcceleration;
     static float carVelocity;
     static float carAngularVelocity;
 
-    // car flags
+    // Flags do carro
     boolean carIsFrictioning;
     boolean carIsBraking;
 
-    // car timers
+    // Timers do carro
     float timer;
 
-    public Car(Texture img, int i, int i1, int i2, int i3) {
+    public Car2(Texture img, int i, int i1, int i2, int i3) {
         super(img, i, i1, i2, i3);
-        carInputProcessor = new CarInputProcessor(this); //WASD
+        carInputProcessor2 = new CarInputProcessor2(this); //setinhas
 
         this.carMaxAcceleration = 100; // o quanto o carro acelera
         this.carMaxBraking = -300; // o quanto o carro freia
@@ -96,10 +96,10 @@ public class Car extends Sprite {
     public void carSetForward(){
         this.carIsFrictioning=false;
         if(this.carVelocity>=0){ // se o carro tiver indo pra frente ou parado
-            this.carAcceleration = this.getCarMaxAcceleration(); // recebe aceleração máxima
+            this.carAcceleration = this.getCarMaxAcceleration();
         }
         else{ // se o carro tiver indo para trás
-            this.carIsBraking = true; // recebe frenagem máxima
+            this.carIsBraking = true;
             this.carAcceleration = - this.getCarMaxBraking();
         }
     }
