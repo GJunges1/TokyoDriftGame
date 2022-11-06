@@ -14,23 +14,23 @@ public class CarInputProcessor implements InputProcessor {
     @Override
     public boolean keyDown(int keycode) {
         switch(keycode){
-//            case Input.Keys.A:
-            case Input.Keys.LEFT:
+            case Input.Keys.A:
+//            case Input.Keys.LEFT:
                 car.carPressLeft();
 //                System.out.printf("pA ");
                 break;
-            case Input.Keys.RIGHT:
-//            case Input.Keys.D:
+//            case Input.Keys.RIGHT:
+            case Input.Keys.D:
                 car.carPressRight();
 //                System.out.printf("pD ");
                 break;
-            case Input.Keys.A:
-//            case Input.Keys.W:
+//            case Input.Keys.A:
+            case Input.Keys.W:
                 car.carSetForward();
 //                System.out.printf("pW ");
                 break;
-            case Input.Keys.Z:
-//            case Input.Keys.S:
+//            case Input.Keys.Z:
+            case Input.Keys.S:
                 car.carSetBackwards();
 //                System.out.printf("pS ");
                 break;
@@ -41,20 +41,20 @@ public class CarInputProcessor implements InputProcessor {
     @Override
     public boolean keyUp(int keycode) {
         switch(keycode){
-            case Input.Keys.A:
-            case Input.Keys.Z:
-//            case Input.Keys.W:
-//            case Input.Keys.S:
+//            case Input.Keys.A:
+//            case Input.Keys.Z:
+            case Input.Keys.W:
+            case Input.Keys.S:
 //                System.out.printf("rWS ");
                 car.carSetIdle();
                 break;
-            case Input.Keys.LEFT:
-//            case Input.Keys.A:
+//            case Input.Keys.LEFT:
+            case Input.Keys.A:
                 car.carReleaseLeft();
 //                System.out.printf("rA ");
                 break;
-            case Input.Keys.RIGHT:
-//            case Input.Keys.D:
+//            case Input.Keys.RIGHT:
+            case Input.Keys.D:
                 car.carReleaseRight();
 //                System.out.printf("rD ");
                 break;

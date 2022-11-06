@@ -17,10 +17,10 @@ public class MainScreen implements Screen {
     SpriteBatch batch;
     Car car;
     Circuit circuit;
-    final static int CAR_WIDTH=248;
-    final static int CAR_HEIGHT=480;
-
-    final static int img2Width = 512;
+//    final static int CAR_WIDTH=248;
+//    final static int CAR_HEIGHT=480;
+//
+//    final static int img2Width = 512;
 
     @Override
     public void show() {
@@ -29,6 +29,7 @@ public class MainScreen implements Screen {
         img1 = new Texture("car.png");
         img2 = new Texture("circuit.png");
 
+        // creating camera
         camera = new OrthographicCamera();
         camera.setToOrtho(false, Gdx.graphics.getWidth()/3, Gdx.graphics.getHeight()/3);
 
@@ -42,9 +43,9 @@ public class MainScreen implements Screen {
         car.setX(71.611237f);
         car.setY(268.462372f);
 
-//        car.setY(Gdx.graphics.getHeight() / 2 - car.getHeight() / 2);
-//        car.setX(Gdx.graphics.getWidth() / 2 - car.getWidth() / 2);
         car.setSize(car.getWidth()/10,car.getHeight()/10);
+
+        // setting car's rotation center to itself (not center of screen)
         car.setOriginCenter();
     }
 

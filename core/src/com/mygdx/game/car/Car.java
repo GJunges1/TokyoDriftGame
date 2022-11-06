@@ -9,22 +9,22 @@ public class Car extends Sprite {
     CarInputProcessor carInputProcessor;
     static Car ref;
 
-    // Constantes do carro
+    // car constraints
     static float carMaxAcceleration;
     static float carMaxBraking;
     static float carFriction;
     static float carHandling;
 
-    // Variáveis do carro
+    // car variables
     static float carAcceleration;
     static float carVelocity;
     static float carAngularVelocity;
 
-    // Flags do carro
+    // car flags
     boolean carIsFrictioning;
     boolean carIsBraking;
 
-    // Timers do carro
+    // car timers
     float timer;
 
     public Car(Texture img, int i, int i1, int i2, int i3) {
@@ -96,10 +96,10 @@ public class Car extends Sprite {
     public void carSetForward(){
         this.carIsFrictioning=false;
         if(this.carVelocity>=0){ // se o carro tiver indo pra frente ou parado
-            this.carAcceleration = this.getCarMaxAcceleration();
+            this.carAcceleration = this.getCarMaxAcceleration(); // recebe aceleração máxima
         }
         else{ // se o carro tiver indo para trás
-            this.carIsBraking = true;
+            this.carIsBraking = true; // recebe frenagem máxima
             this.carAcceleration = - this.getCarMaxBraking();
         }
     }
