@@ -8,7 +8,7 @@ public class CarInputProcessor implements InputProcessor {
     Car car;
     public CarInputProcessor(Car car){
         this.car = car;
-        Gdx.input.setInputProcessor(this);
+//        Gdx.input.setInputProcessor(this);
     }
 
     @Override
@@ -29,7 +29,7 @@ public class CarInputProcessor implements InputProcessor {
                 car.carSetBackwards();
                 break;
         }
-        return true;
+        return false;
     }
 
     @Override
@@ -48,7 +48,7 @@ public class CarInputProcessor implements InputProcessor {
                 car.carReleaseRight();
                 break;
         }
-        return true;
+        return false;
     }
 
     @Override

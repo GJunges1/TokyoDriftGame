@@ -1,6 +1,7 @@
 package com.mygdx.game;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -10,6 +11,8 @@ import com.mygdx.game.car.Car;
 import com.mygdx.game.car.Car2;
 import com.mygdx.game.circuit.Circuit;
 
+import java.awt.*;
+
 public class MainScreen implements Screen {
     public static MainScreen ref;
     public static Texture car1_img,img2,car2_img;
@@ -18,6 +21,9 @@ public class MainScreen implements Screen {
     Car car1;
     Car2 car2;
     Circuit circuit;
+    Viewport carViewport1;
+    Viewport carViewport2;
+    InputMultiplexer inputMultiplexer;
 
     //private OrthogonalTiledMapRenderer orthogonalTiledMapRenderer;
     //private TileMapHelper tileMapHelper;
@@ -33,8 +39,18 @@ public class MainScreen implements Screen {
         car2_img = new Texture("car2.png");
         img2 = new Texture("map.png");
 
+        //camera = new OrthographicCamera();
         camera = new OrthographicCamera();
-        camera.setToOrtho(false, Gdx.graphics.getWidth()/3, Gdx.graphics.getHeight()/3);
+        camera.setToOrtho(false, Gdx.graphics.getWidth()/6, Gdx.graphics.getHeight()/3);
+
+        // *** START VIEWPORT *** //
+
+        carViewport1 = new FitViewport(Gdx.graphics.getWidth()/2, Gdx.graphics.getHeight(), camera);
+        carViewport1.setScreenBounds(0, 0, Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight());
+        carViewport2 = new FitViewport(Gdx.graphics.getWidth()/2, Gdx.graphics.getHeight(), camera);
+        carViewport2.setScreenBounds(Gdx.graphics.getWidth()/2, 0, Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight());
+
+        // *** END VIEWPORT *** //
 
         circuit = new Circuit(img2, 0, 0, img2.getWidth(), img2.getHeight());
         circuit.setSize(circuit.getWidth(),circuit.getHeight());

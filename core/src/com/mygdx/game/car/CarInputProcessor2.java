@@ -8,7 +8,7 @@ public class CarInputProcessor2 implements InputProcessor {
     Car2 car;
     public CarInputProcessor2(Car2 car){
         this.car = car;
-        Gdx.input.setInputProcessor(this);
+//        Gdx.input.setInputProcessor(this);
     }
 
     @Override
@@ -22,6 +22,7 @@ public class CarInputProcessor2 implements InputProcessor {
                 break;
             //case Input.Keys.A:
             case Input.Keys.UP:
+                System.out.println("CIMA");
                 car.carSetForward();
                 break;
             //case Input.Keys.Z:
