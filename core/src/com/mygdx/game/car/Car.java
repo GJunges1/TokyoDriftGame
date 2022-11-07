@@ -5,7 +5,7 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 public class Car extends Sprite {
-    CarInputProcessor carInputProcessor;
+    public CarInputProcessor carInputProcessor;
     static Car ref;
 
     // car constraints
@@ -26,8 +26,10 @@ public class Car extends Sprite {
     // car timers
     float timer;
 
-    public Car(Texture img, int i, int i1, int i2, int i3) {
-        super(img, i, i1, i2, i3);
+    public Car(Texture img, Texture img_braking, int i, int i1, int i2, int i3) {
+        super(img_braking, i, i1, i2, i3);
+        this.img = img;
+        this.img_braking = img_braking;
         carInputProcessor = new CarInputProcessor(this); //WASD
 
         this.carMaxAcceleration = 100; // o quanto o carro acelera

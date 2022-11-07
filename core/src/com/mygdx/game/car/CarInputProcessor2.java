@@ -22,7 +22,6 @@ public class CarInputProcessor2 implements InputProcessor {
                 break;
             //case Input.Keys.A:
             case Input.Keys.UP:
-                System.out.println("CIMA");
                 car.carSetForward();
                 break;
             //case Input.Keys.Z:

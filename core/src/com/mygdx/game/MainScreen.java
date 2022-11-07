@@ -3,13 +3,19 @@ package com.mygdx.game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.utils.ScreenUtils;
+import com.badlogic.gdx.utils.viewport.FitViewport;
+import com.badlogic.gdx.utils.viewport.Viewport;
 import com.mygdx.game.car.Car;
 import com.mygdx.game.car.Car2;
 import com.mygdx.game.circuit.Circuit;
+import com.badlogic.gdx.graphics.Color;
 
 import java.awt.*;
 
@@ -18,12 +24,17 @@ public class MainScreen implements Screen {
     public static Texture car1_img,img2,car2_img;
     OrthographicCamera camera;
     SpriteBatch batch;
+    ShapeRenderer shape;
     Car car1;
     Car2 car2;
     Circuit circuit;
     Viewport carViewport1;
     Viewport carViewport2;
     InputMultiplexer inputMultiplexer;
+
+    private Music music;
+
+    private Viewport viewport;
 
     //private OrthogonalTiledMapRenderer orthogonalTiledMapRenderer;
     //private TileMapHelper tileMapHelper;
@@ -35,13 +46,14 @@ public class MainScreen implements Screen {
 
         ref = this;
         batch = new SpriteBatch();
+        shape = new ShapeRenderer();
         car1_img = new Texture("car1.png");
         car2_img = new Texture("car2.png");
         img2 = new Texture("map.png");
 
         //camera = new OrthographicCamera();
         camera = new OrthographicCamera();
-        camera.setToOrtho(false, Gdx.graphics.getWidth()/6, Gdx.graphics.getHeight()/3);
+        camera.setToOrtho(false, Gdx.graphics.getWidth()/3, Gdx.graphics.getHeight()/3);
 
         // *** START VIEWPORT *** //
 
@@ -69,6 +81,14 @@ public class MainScreen implements Screen {
 
         car2.setSize(car2.getWidth()/10,car2.getHeight()/10);
         car2.setOriginCenter();
+
+
+        // *** START MUSIC *** //
+        Music music = Gdx.audio.newMusic(Gdx.files.internal("tokyo_drift.wav"));
+        music.setVolume(0.1f);
+        music.setLooping(true);
+        music.play();
+        // *** END MUSIC *** //
     }
 
     private void update(){
@@ -94,6 +114,21 @@ public class MainScreen implements Screen {
 
         batch.setProjectionMatrix(camera.combined);
         batch.end();
+
+
+        shape.setProjectionMatrix(camera.combined);
+
+        shape.begin(ShapeRenderer.ShapeType.Line);
+        shape.setColor(Color.RED);
+        shape.rect(0, 0, 50, 50);
+        shape.setColor(Color.BLUE);
+        shape.ellipse(50, 0, 50, 50);
+        shape.end();
+
+        shape.begin(ShapeRenderer.ShapeType.Filled);
+        shape.setColor(Color.GREEN);
+        shape.triangle(100, 0, 150, 0,125,100);
+        shape.end();
     }
 
     @Override
