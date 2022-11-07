@@ -21,7 +21,7 @@ import java.awt.*;
 
 public class MainScreen implements Screen {
     public static MainScreen ref;
-    public static Texture car1_img,img2,car2_img;
+    public static Texture car1_img,img2,car2_img, car1Braking_img, car2Braking_img;
     OrthographicCamera camera;
     SpriteBatch batch;
     ShapeRenderer shape;
@@ -51,6 +51,11 @@ public class MainScreen implements Screen {
         car2_img = new Texture("car2.png");
         img2 = new Texture("map.png");
 
+        // *** START GAMBIARRA CAR BREAKING TEXTURE ***//
+        car1Braking_img = new Texture("car1_braking.png");
+        car2Braking_img = new Texture("car2_braking.png");
+        // *** END GAMBIARRA CAR BREAKING TEXTURE ***//
+
         //camera = new OrthographicCamera();
         camera = new OrthographicCamera();
         camera.setToOrtho(false, Gdx.graphics.getWidth()/3, Gdx.graphics.getHeight()/3);
@@ -67,9 +72,14 @@ public class MainScreen implements Screen {
         circuit = new Circuit(img2, 0, 0, img2.getWidth(), img2.getHeight());
         circuit.setSize(circuit.getWidth(),circuit.getHeight());
 
-        car2 = new Car2(car2_img, 0, 0, car2_img.getWidth(), car2_img.getHeight());
-        car1 = new Car(car1_img, 0, 0, car1_img.getWidth(), car1_img.getHeight());
+        car2 = new Car2(car2_img, car2Braking_img, 0, 0, car2_img.getWidth(), car2_img.getHeight());
+        car1 = new Car(car1_img, car1Braking_img, 0, 0, car1_img.getWidth(), car1_img.getHeight());
 
+        inputMultiplexer = new InputMultiplexer();
+        inputMultiplexer.addProcessor(car1.carInputProcessor);
+        inputMultiplexer.addProcessor(car2.carInputProcessor2);
+
+        Gdx.input.setInputProcessor(inputMultiplexer);
         // setting car position to track starting line
         car1.setX(170f);
         car1.setY(400f);

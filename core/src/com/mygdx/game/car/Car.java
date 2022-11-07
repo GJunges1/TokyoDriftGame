@@ -25,6 +25,7 @@ public class Car extends Sprite {
 
     // car timers
     float timer;
+    Texture img, img_braking;
 
     public Car(Texture img, Texture img_braking, int i, int i1, int i2, int i3) {
         super(img_braking, i, i1, i2, i3);
@@ -99,10 +100,12 @@ public class Car extends Sprite {
         this.carIsFrictioning=false;
         if(this.carVelocity>=0){ // se o carro tiver indo pra frente ou parado
             this.carAcceleration = this.getCarMaxAcceleration(); // recebe aceleração máxima
+            this.setTexture(this.img);
         }
         else{ // se o carro tiver indo para trás
             this.carIsBraking = true; // recebe frenagem máxima
             this.carAcceleration = - this.getCarMaxBraking();
+            this.setTexture(this.img_braking);
         }
     }
 
@@ -111,9 +114,11 @@ public class Car extends Sprite {
         if(this.carVelocity>0){ // se o carro tiver indo pra frente
             this.carIsBraking = true;
             this.carAcceleration = this.getCarMaxBraking();
+            this.setTexture(this.img_braking);
         }
         else{
             this.carAcceleration = - this.getCarMaxAcceleration();
+            this.setTexture(this.img);
         }
     }
 
@@ -128,6 +133,7 @@ public class Car extends Sprite {
         else{
             this.carAcceleration = 0;
         }
+        this.setTexture(this.img);
     }
 
     public void carPressLeft(){
