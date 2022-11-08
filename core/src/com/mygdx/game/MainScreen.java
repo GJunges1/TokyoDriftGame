@@ -110,35 +110,39 @@ public class MainScreen implements Screen {
         //this.update();
         ScreenUtils.clear(0, 0, 0, 1);
         //orthogonalTiledMapRenderer.render();
+
+        // *** START BATCH CAR 1 ***
         batch.begin();
 
+        carViewport1.apply();
         camera.position.set(car1.getX(),car1.getY(),0);
         camera.update();
+
         circuit.draw(batch,delta);
-
         car1.draw(batch, delta);
-        car1.update(delta);
-
         car2.draw(batch, delta);
-        car2.update(delta);
 
         batch.setProjectionMatrix(camera.combined);
         batch.end();
+        // *** END BATCH CAR 1 ***
 
+        // *** START BATCH CAR 2 ***
+        batch.begin();
 
-        shape.setProjectionMatrix(camera.combined);
+        carViewport2.apply();
+        camera.position.set(car2.getX(),car2.getY(),0);
+        camera.update();
 
-        shape.begin(ShapeRenderer.ShapeType.Line);
-        shape.setColor(Color.RED);
-        shape.rect(0, 0, 50, 50);
-        shape.setColor(Color.BLUE);
-        shape.ellipse(50, 0, 50, 50);
-        shape.end();
+        circuit.draw(batch,delta);
+        car1.draw(batch, delta);
+        car2.draw(batch, delta);
 
-        shape.begin(ShapeRenderer.ShapeType.Filled);
-        shape.setColor(Color.GREEN);
-        shape.triangle(100, 0, 150, 0,125,100);
-        shape.end();
+        car1.update(delta); // UPDATE CARS POSITIONS
+        car2.update(delta); // '                   '
+
+        batch.setProjectionMatrix(camera.combined);
+        batch.end();
+        // *** END BATCH CAR 2 ***
     }
 
     @Override
