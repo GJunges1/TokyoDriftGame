@@ -6,60 +6,80 @@ import com.badlogic.gdx.InputProcessor;
 
 public class CarInputProcessor implements InputProcessor {
     Car car;
-    CarInputProcessor(Car car){
+    final boolean isItTheRightCar;
+    public CarInputProcessor(Car car, final boolean isItTheRightCar){
         this.car = car;
-        Gdx.input.setInputProcessor(this);
+        this.isItTheRightCar = isItTheRightCar;
     }
 
     @Override
     public boolean keyDown(int keycode) {
-        switch(keycode){
-//            case Input.Keys.A:
-            case Input.Keys.LEFT:
-                car.carPressLeft();
-//                System.out.printf("pA ");
-                break;
-            case Input.Keys.RIGHT:
-//            case Input.Keys.D:
-                car.carPressRight();
-//                System.out.printf("pD ");
-                break;
-            case Input.Keys.A:
-//            case Input.Keys.W:
-                car.carSetForward();
-//                System.out.printf("pW ");
-                break;
-            case Input.Keys.Z:
-//            case Input.Keys.S:
-                car.carSetBackwards();
-//                System.out.printf("pS ");
-                break;
+        if(!isItTheRightCar) {
+            switch (keycode) {
+                case Input.Keys.A:
+                    car.carPressLeft();
+                    break;
+                case Input.Keys.D:
+                    car.carPressRight();
+                    break;
+                case Input.Keys.W:
+                    car.carSetForward();
+                    break;
+                case Input.Keys.S:
+                    car.carSetBackwards();
+                    break;
+            }
         }
-        return true;
+        else{
+            switch (keycode) {
+                case Input.Keys.LEFT:
+                    car.carPressLeft();
+                    break;
+                case Input.Keys.RIGHT:
+                    car.carPressRight();
+                    break;
+                case Input.Keys.UP:
+                    car.carSetForward();
+                    break;
+                case Input.Keys.DOWN:
+                    car.carSetBackwards();
+                    break;
+            }
+        }
+        return false;
     }
 
     @Override
     public boolean keyUp(int keycode) {
-        switch(keycode){
-            case Input.Keys.A:
-            case Input.Keys.Z:
-//            case Input.Keys.W:
-//            case Input.Keys.S:
-//                System.out.printf("rWS ");
-                car.carSetIdle();
-                break;
-            case Input.Keys.LEFT:
-//            case Input.Keys.A:
-                car.carReleaseLeft();
-//                System.out.printf("rA ");
-                break;
-            case Input.Keys.RIGHT:
-//            case Input.Keys.D:
-                car.carReleaseRight();
-//                System.out.printf("rD ");
-                break;
+        if(!isItTheRightCar) {
+            switch (keycode) {
+                case Input.Keys.W:
+                case Input.Keys.S:
+                    car.carSetIdle();
+                    break;
+                case Input.Keys.A:
+                    car.carReleaseLeft();
+                    break;
+                case Input.Keys.D:
+                    car.carReleaseRight();
+                    break;
+            }
         }
-        return true;
+        else{
+            switch (keycode) {
+                case Input.Keys.UP:
+                case Input.Keys.DOWN:
+                    car.carSetIdle();
+                    break;
+                case Input.Keys.LEFT:
+                    car.carReleaseLeft();
+                    break;
+                case Input.Keys.RIGHT:
+                    car.carReleaseRight();
+                    break;
+            }
+        }
+        return false;
     }
 
     @Override
