@@ -4,7 +4,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Music;
-import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -13,11 +12,7 @@ import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.mygdx.game.car.Car;
-import com.mygdx.game.car.Car2;
 import com.mygdx.game.circuit.Circuit;
-import com.badlogic.gdx.graphics.Color;
-
-import java.awt.*;
 
 public class MainScreen implements Screen {
     public static MainScreen ref;
@@ -25,8 +20,7 @@ public class MainScreen implements Screen {
     OrthographicCamera camera;
     SpriteBatch batch;
     ShapeRenderer shape;
-    Car car1;
-    Car2 car2;
+    Car car1,car2;
     Circuit circuit;
     Viewport carViewport1;
     Viewport carViewport2;
@@ -63,21 +57,31 @@ public class MainScreen implements Screen {
         // *** START VIEWPORT *** //
 
         carViewport1 = new FitViewport(Gdx.graphics.getWidth()/2, Gdx.graphics.getHeight(), camera);
-        carViewport1.setScreenBounds(0, 0, Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight());
         carViewport2 = new FitViewport(Gdx.graphics.getWidth()/2, Gdx.graphics.getHeight(), camera);
-        carViewport2.setScreenBounds(Gdx.graphics.getWidth()/2, 0, Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight());
+        carViewport1.setScreenBounds(Gdx.graphics.getWidth()/2, 0, Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight());
+        carViewport2.setScreenBounds(0, 0, Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight());
 
         // *** END VIEWPORT *** //
 
         circuit = new Circuit(img2, 0, 0, img2.getWidth(), img2.getHeight());
         circuit.setSize(circuit.getWidth(),circuit.getHeight());
 
-        car2 = new Car2(car2_img, car2Braking_img, 0, 0, car2_img.getWidth(), car2_img.getHeight());
-        car1 = new Car(car1_img, car1Braking_img, 0, 0, car1_img.getWidth(), car1_img.getHeight());
+        car1 = new Car(car1_img,car1Braking_img, 0, 0, car1_img.getWidth(), car1_img.getHeight(),
+                800,
+                6,
+                400,
+                100,
+                false);
+        car2 = new Car(car2_img, car2Braking_img, 0, 0, car2_img.getWidth(), car2_img.getHeight(),
+                800,
+                6,
+                400,
+                100,
+                true);
 
         inputMultiplexer = new InputMultiplexer();
         inputMultiplexer.addProcessor(car1.carInputProcessor);
-        inputMultiplexer.addProcessor(car2.carInputProcessor2);
+        inputMultiplexer.addProcessor(car2.carInputProcessor);
 
         Gdx.input.setInputProcessor(inputMultiplexer);
         // setting car position to track starting line
@@ -137,12 +141,12 @@ public class MainScreen implements Screen {
         car1.draw(batch, delta);
         car2.draw(batch, delta);
 
-        car1.update(delta); // UPDATE CARS POSITIONS
-        car2.update(delta); // '                   '
-
         batch.setProjectionMatrix(camera.combined);
         batch.end();
         // *** END BATCH CAR 2 ***
+
+        car1.update(delta); // UPDATE CARS POSITIONS
+        car2.update(delta); // '                   '
     }
 
     @Override

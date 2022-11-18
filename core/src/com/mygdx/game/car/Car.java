@@ -6,148 +6,157 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 public class Car extends Sprite {
     public CarInputProcessor carInputProcessor;
-    static Car ref;
+    Car ref;
 
     // car constraints
-    static float carMaxAcceleration;
-    static float carMaxBraking;
-    static float carFriction;
-    static float carHandling;
+    final float carMaxVelocity;
+    final float carAccelerationTime;
+    final float carMaxBraking;
+    final float carFriction;
+    final float carHandling;
 
     // car variables
-    static float carAcceleration;
-    static float carVelocity;
-    static float carAngularVelocity;
+    float carAcceleration;
+    float carVelocity;
+    float carAngularVelocity;
 
     // car flags
-    boolean carIsFrictioning;
-    boolean carIsBraking;
+    int carState;
+    static final int carIsIdle=0;
+    static final int carIsAccelerating=1;
+    static final int carIsBraking=2;
+    static final int carIsFrictioning=3;
+    int movingDirection;
 
     // car timers
     float timer;
     Texture img, img_braking;
 
-    public Car(Texture img, Texture img_braking, int i, int i1, int i2, int i3) {
+    public Car(Texture img, Texture img_braking, int i, int i1, int i2, int i3,
+               float carMaxVelocity,
+               float carAccelerationTime,
+               float carMaxBraking,
+               float carHandling,
+               final boolean isItTheRightCar) {
         super(img_braking, i, i1, i2, i3);
         this.img = img;
         this.img_braking = img_braking;
-        carInputProcessor = new CarInputProcessor(this); //WASD
+        carInputProcessor = new CarInputProcessor(this, isItTheRightCar); //WASD
 
-        this.carMaxAcceleration = 100; // o quanto o carro acelera
-        this.carMaxBraking = -300; // o quanto o carro freia
+        this.carMaxVelocity = Math.abs(carMaxVelocity); // a velocidade máxima
+        this.carAccelerationTime=carAccelerationTime; // o tempo que o carro demora pra acelerar
+        this.carHandling = Math.abs(carHandling); // o quanto o carro vira
+        this.carMaxBraking = -Math.abs(carMaxBraking); // o quanto o carro freia
         this.carFriction = -40; // o quanto o carro sofre atrito do chão
-        this.carHandling = 100; // o quanto o carro vira
+        this.movingDirection=1;
         ref = this;
     }
 
     public void update(float delta){
+//        System.out.printf("v%.0f\t%.0f\n",carVelocity,carAcceleration);
 
         // se o carro estiver se movendo, então ele pode virar:
         if(Math.abs(this.carVelocity)>=0.05) {
-
-            // sinal para inverter a rotação se o carro estiver indo de ré
-            int v_signal = (int) (this.carVelocity / Math.abs(carVelocity));
-
-            this.rotate(carAngularVelocity*delta*v_signal);
+            this.rotate(carAngularVelocity*delta*movingDirection);
         }
-
-        // se o carro estiver sem acelerar nem frear:
-        if(this.carIsFrictioning){
-            // e a magnitude de sua velocidade for menor que 0.5, pára-se o carro, então...
-            if(Math.abs(this.carVelocity) < 0.5){
-                this.carIsFrictioning = false; // ...encerra-se o atrito
-                this.carVelocity = 0; // ...zera-se a velocidade
-                this.carAcceleration=0; // ...zera-se a aceleração
-            }
+        switch(carState){
+            case carIsIdle:
+                break;
+            case carIsAccelerating:
+                updateCarAcceleration();
+                break;
+            case carIsBraking:
+                carAcceleration=movingDirection*carMaxBraking;
+                if(carFinishedBrakingFrictioning() || (int)(Math.abs(carVelocity)/carVelocity)!=movingDirection){
+                    carSetAccelerating();
+                    movingDirection*=-1;
+                    carVelocity=0;
+                    carAcceleration=0;
+                }
+                break;
+            case carIsFrictioning:
+                carAcceleration=carFriction*movingDirection;
+                if(carFinishedBrakingFrictioning()){
+                    this.carState = carIsIdle; // ...encerra-se o atrito
+                    this.carVelocity = 0; // ...zera-se a velocidade
+                    this.carAcceleration = 0; // ...zera-se a aceleração
+                }
+                break;
 
         }
         this.carVelocity += this.carAcceleration * delta;
-        if(this.carIsBraking){
-            if(carFinishedBraking(carVelocity)){
-                carAcceleration = (int)(Math.abs(carAcceleration)/carAcceleration)*this.getCarMaxAcceleration();
-                carVelocity=0;
-                carIsBraking=false;
-            }
-        }
         float sine = (float)Math.sin(  Math.toRadians( -this.getRotation()) );
         float cosine = (float)Math.cos( Math.toRadians( -this.getRotation()) );
         this.setX(this.getX()+sine*this.carVelocity*delta);
         this.setY(this.getY()+cosine*this.carVelocity*delta);
         timer+=delta;
     }
-    private boolean carFinishedBraking(float currV){
-        return (Math.abs(currV)<0.5);
-    }
-    public float getCarMaxAcceleration(){
-        return this.carMaxAcceleration;
-    }
-    public float getCarFriction(){
-        return this.carFriction;
+    private boolean carFinishedBrakingFrictioning(){
+        return (Math.abs(carVelocity)<0.5);
     }
 
-    public float getCarMaxBraking(){
-        return this.carMaxBraking;
-    }
-
-    public float getCarHandling(){
-        return this.carHandling;
-    }
     public void draw(SpriteBatch batch, float delta) {
         super.draw(batch);
     }
+    private void updateCarAcceleration(){
+        // se o carro tiver mais rápido que a velocidade máxima, a aceleração é zero
+        if(Math.abs(this.carVelocity)>=this.carMaxVelocity){
+            this.carAcceleration=0;
+            this.carVelocity = movingDirection * carMaxVelocity;
+        }
+        // se não, é dependente da velocidade
+        else {
+            this.carAcceleration = movingDirection * (carMaxVelocity - Math.abs(carVelocity)) /carAccelerationTime;
+        }
+    }
 
+    private void carSetBraking(){
+        carState=carIsBraking;
+        this.setTexture(img_braking);
+    }
+    private void carSetAccelerating(){
+        carState=carIsAccelerating;
+        this.setTexture(this.img);
+    }
     public void carSetForward(){
-        this.carIsFrictioning=false;
-        if(this.carVelocity>=0){ // se o carro tiver indo pra frente ou parado
-            this.carAcceleration = this.getCarMaxAcceleration(); // recebe aceleração máxima
-            this.setTexture(this.img);
+        if(this.carVelocity>-0.5){ // se o carro tiver indo pra frente ou parado
+            movingDirection=1;
+            carSetAccelerating();
         }
         else{ // se o carro tiver indo para trás
-            this.carIsBraking = true; // recebe frenagem máxima
-            this.carAcceleration = - this.getCarMaxBraking();
-            this.setTexture(this.img_braking);
+            movingDirection=-1;
+            carSetBraking();
         }
     }
 
     public void carSetBackwards(){
-        this.carIsFrictioning=false;
-        if(this.carVelocity>0){ // se o carro tiver indo pra frente
-            this.carIsBraking = true;
-            this.carAcceleration = this.getCarMaxBraking();
-            this.setTexture(this.img_braking);
+        if(this.carVelocity>0.5){ // se o carro tiver indo pra frente
+            movingDirection=1;
+            carSetBraking();
         }
-        else{
-            this.carAcceleration = - this.getCarMaxAcceleration();
-            this.setTexture(this.img);
+        else{ // se o carro tiver indo pra trás ou parado
+            movingDirection=-1;
+            carSetAccelerating();
         }
     }
 
     public void carSetIdle(){
-        this.carIsFrictioning=true;
-        if(this.carVelocity>0){
-            this.carAcceleration = this.getCarFriction();
-        }
-        else if(this.carVelocity<0){
-            this.carAcceleration = - this.getCarFriction();
-        }
-        else{
-            this.carAcceleration = 0;
-        }
+        carState=carIsFrictioning;
         this.setTexture(this.img);
     }
 
     public void carPressLeft(){
-        this.carAngularVelocity += + this.getCarHandling();
+        this.carAngularVelocity += + carHandling;
     }
 
     public void carPressRight(){
-        this.carAngularVelocity += - this.getCarHandling();
+        this.carAngularVelocity += - carHandling;
     }
     public void carReleaseLeft(){
-        this.carAngularVelocity -= + this.getCarHandling();
+        this.carAngularVelocity -= + carHandling;
     }
 
     public void carReleaseRight(){
-        this.carAngularVelocity -= - this.getCarHandling();
+        this.carAngularVelocity -= - carHandling;
     }
 }
