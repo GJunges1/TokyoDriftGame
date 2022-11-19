@@ -6,6 +6,7 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.utils.ScreenUtils;
@@ -16,7 +17,7 @@ import com.mygdx.game.circuit.Circuit;
 
 public class MainScreen implements Screen {
     public static MainScreen ref;
-    public static Texture car1_img,img2,car2_img, car1Braking_img, car2Braking_img;
+    public static Texture car1_img, img2, car2_img, car1Braking_img, car2Braking_img;
     OrthographicCamera camera;
     SpriteBatch batch;
     ShapeRenderer shape;
@@ -25,6 +26,8 @@ public class MainScreen implements Screen {
     Viewport carViewport1;
     Viewport carViewport2;
     InputMultiplexer inputMultiplexer;
+    BitmapFont bitmapFont;
+    long startTime, totalSEC, hours, min ,sec;
 
     private Music music;
 
@@ -103,6 +106,12 @@ public class MainScreen implements Screen {
         music.setLooping(true);
         music.play();
         // *** END MUSIC *** //
+
+        // *** START FONT *** //
+        bitmapFont = new BitmapFont(Gdx.files.internal("TokyoDrift_font.fnt"));
+        // *** END MUSIC *** //
+
+        startTime = System.currentTimeMillis();
     }
 
     private void update(){
@@ -110,7 +119,12 @@ public class MainScreen implements Screen {
     }
 
     @Override
-    public void render(float delta) {
+    public void render(float delta){
+        totalSEC = (System.currentTimeMillis() - startTime)/1000;
+        sec = totalSEC % 60;
+        min = (totalSEC % 3600) / 60;
+        hours = totalSEC / 3600;
+
         //this.update();
         ScreenUtils.clear(0, 0, 0, 1);
         //orthogonalTiledMapRenderer.render();
@@ -127,6 +141,10 @@ public class MainScreen implements Screen {
         car2.draw(batch, delta);
 
         batch.setProjectionMatrix(camera.combined);
+
+        printTime(car1,hours,min,sec);
+        bitmapFont.draw(batch,"VOLTA" + "           ? / 3", car1.getX()+70, car1.getY()+320);
+
         batch.end();
         // *** END BATCH CAR 1 ***
 
@@ -142,6 +160,10 @@ public class MainScreen implements Screen {
         car2.draw(batch, delta);
 
         batch.setProjectionMatrix(camera.combined);
+
+        printTime(car2,hours,min,sec);
+        bitmapFont.draw(batch,"VOLTA" + "           ? / 3", car2.getX()+70, car2.getY()+320);
+
         batch.end();
         // *** END BATCH CAR 2 ***
 
@@ -174,5 +196,45 @@ public class MainScreen implements Screen {
         car1_img.dispose();
         car2_img.dispose();
         img2.dispose();
+    }
+
+    //PRINTAR CORRETAMENTE O TEMPO NO FORMATO 00:00:00
+    public void printTime(Car car,long hours, long min, long sec){
+        if(hours<10){
+            if(min<10){
+                if(sec<10){
+                    bitmapFont.draw(batch, "TEMPO     " + "0" + hours + ".0" + min + ".0" + sec, car.getX() + 70, car.getY() + 350);
+                }
+                else{
+                    bitmapFont.draw(batch, "TEMPO     " + "0" + hours + ".0" + min + "." + sec, car.getX() + 70, car.getY() + 350);
+                }
+            }
+            else{
+                if(sec<10){
+                    bitmapFont.draw(batch, "TEMPO     " + "0" + hours + "." + min + ".0" + sec, car.getX() + 70, car.getY() + 350);
+                }
+                else{
+                    bitmapFont.draw(batch, "TEMPO     " + "0" + hours + "." + min + "." + sec, car.getX() + 70, car.getY() + 350);
+                }
+            }
+        }
+        else{
+            if(min<10){
+                if(sec<10){
+                    bitmapFont.draw(batch, "TEMPO     " + "" + hours + ".0" + min + ".0" + sec, car.getX() + 70, car.getY() + 350);
+                }
+                else{
+                    bitmapFont.draw(batch, "TEMPO     " + "" + hours + ".0" + min + "." + sec, car.getX() + 70, car.getY() + 350);
+                }
+            }
+            else{
+                if(sec<10){
+                    bitmapFont.draw(batch, "TEMPO     " + "" + hours + "." + min + ".0" + sec, car.getX() + 70, car.getY() + 350);
+                }
+                else{
+                    bitmapFont.draw(batch, "TEMPO     " + "" + hours + "." + min + "." + sec, car.getX() + 70, car.getY() + 350);
+                }
+            }
+        }
     }
 }
