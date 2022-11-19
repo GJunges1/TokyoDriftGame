@@ -13,7 +13,7 @@ public class TileMapHelper {
     }
 
     public OrthogonalTiledMapRenderer setupMap(){
-        tiledmap = new TmxMapLoader().load("C:/Users//dania/Desktop/Tudo/TokyoDriftGame/core/src/map/map.tmx");
+        tiledmap = new TmxMapLoader().load("C:/Users//dania/Desktop/Tudo/TokyoDriftGame/core/src/map/MAP.tmx");
         return new OrthogonalTiledMapRenderer(tiledmap);
     }
 }

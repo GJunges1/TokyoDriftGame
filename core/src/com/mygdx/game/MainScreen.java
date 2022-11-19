@@ -9,11 +9,13 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.mygdx.game.car.Car;
 import com.mygdx.game.circuit.Circuit;
+import helper.TileMapHelper;
 
 public class MainScreen implements Screen {
     public static MainScreen ref;
@@ -33,20 +35,22 @@ public class MainScreen implements Screen {
 
     private Viewport viewport;
 
-    //private OrthogonalTiledMapRenderer orthogonalTiledMapRenderer;
-    //private TileMapHelper tileMapHelper;
+    private OrthogonalTiledMapRenderer orthogonalTiledMapRenderer;
+    private TileMapHelper tileMapHelper;
 
     @Override
     public void show() {
-        //this.tileMapHelper = new TileMapHelper();
-        //this.orthogonalTiledMapRenderer = tileMapHelper.setupMap();
+        // *** START TILED MAP ***//
+        this.tileMapHelper = new TileMapHelper();
+        this.orthogonalTiledMapRenderer = tileMapHelper.setupMap();
+        // *** END TILED MAP ***//
 
         ref = this;
         batch = new SpriteBatch();
         shape = new ShapeRenderer();
         car1_img = new Texture("car1.png");
         car2_img = new Texture("car2.png");
-        img2 = new Texture("map.png");
+        //img2 = new Texture("map.png");
 
         // *** START GAMBIARRA CAR BREAKING TEXTURE ***//
         car1Braking_img = new Texture("car1_braking.png");
@@ -66,8 +70,8 @@ public class MainScreen implements Screen {
 
         // *** END VIEWPORT *** //
 
-        circuit = new Circuit(img2, 0, 0, img2.getWidth(), img2.getHeight());
-        circuit.setSize(circuit.getWidth(),circuit.getHeight());
+        //circuit = new Circuit(img2, 0, 0, img2.getWidth(), img2.getHeight());
+        //circuit.setSize(circuit.getWidth(),circuit.getHeight());
 
         car1 = new Car(car1_img,car1Braking_img, 0, 0, car1_img.getWidth(), car1_img.getHeight(),
                 800,
@@ -115,7 +119,7 @@ public class MainScreen implements Screen {
     }
 
     private void update(){
-        //orthogonalTiledMapRenderer.setView(camera);
+        orthogonalTiledMapRenderer.setView(camera);
     }
 
     @Override
@@ -125,9 +129,9 @@ public class MainScreen implements Screen {
         min = (totalSEC % 3600) / 60;
         hours = totalSEC / 3600;
 
-        //this.update();
+        this.update();
         ScreenUtils.clear(0, 0, 0, 1);
-        //orthogonalTiledMapRenderer.render();
+        orthogonalTiledMapRenderer.render();
 
         // *** START BATCH CAR 1 ***
         batch.begin();
@@ -136,7 +140,7 @@ public class MainScreen implements Screen {
         camera.position.set(car1.getX(),car1.getY(),0);
         camera.update();
 
-        circuit.draw(batch,delta);
+        //circuit.draw(batch,delta);
         car1.draw(batch, delta);
         car2.draw(batch, delta);
 
@@ -155,7 +159,7 @@ public class MainScreen implements Screen {
         camera.position.set(car2.getX(),car2.getY(),0);
         camera.update();
 
-        circuit.draw(batch,delta);
+        //circuit.draw(batch,delta);
         car1.draw(batch, delta);
         car2.draw(batch, delta);
 
