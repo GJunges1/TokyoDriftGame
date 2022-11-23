@@ -141,16 +141,16 @@ public class MainScreen implements Screen {
 
         int alturaTexto = 200;
 
-        this.update();
-        ScreenUtils.clear(0, 0, 0, 1);
-        orthogonalTiledMapRenderer.render();
+
+        ScreenUtils.clear(Color.GREEN);
 
         // *** START BATCH CAR 1 ***
         batch.begin();
-
+        this.update();
         carViewport1.apply();
         camera.position.set(car1.getX(),car1.getY(),0);
         camera.update();
+        orthogonalTiledMapRenderer.render();
 
         //circuit.draw(batch,delta);
         car1.draw(batch, delta);
@@ -166,10 +166,12 @@ public class MainScreen implements Screen {
 
         // *** START BATCH CAR 2 ***
         batch.begin();
+        this.update();
 
         carViewport2.apply();
         camera.position.set(car2.getX(),car2.getY(),0);
         camera.update();
+        orthogonalTiledMapRenderer.render();
 
         //circuit.draw(batch,delta);
         car1.draw(batch, delta);
