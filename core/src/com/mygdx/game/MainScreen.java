@@ -4,11 +4,15 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.maps.tiled.TiledMap;
+import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
+import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.FitViewport;
@@ -38,6 +42,8 @@ public class MainScreen implements Screen {
     private OrthogonalTiledMapRenderer orthogonalTiledMapRenderer;
     private TileMapHelper tileMapHelper;
 
+    private TiledMap tiledmap;
+
     @Override
     public void show() {
         // *** START TILED MAP ***//
@@ -63,12 +69,14 @@ public class MainScreen implements Screen {
 
         // *** START VIEWPORT *** //
 
-        carViewport1 = new FitViewport(Gdx.graphics.getWidth()/2, Gdx.graphics.getHeight(), camera);
-        carViewport2 = new FitViewport(Gdx.graphics.getWidth()/2, Gdx.graphics.getHeight(), camera);
+        carViewport1 = new FitViewport(Gdx.graphics.getWidth()/4, Gdx.graphics.getHeight()/2, camera);
+        carViewport2 = new FitViewport(Gdx.graphics.getWidth()/4, Gdx.graphics.getHeight()/2, camera);
         carViewport1.setScreenBounds(Gdx.graphics.getWidth()/2, 0, Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight());
         carViewport2.setScreenBounds(0, 0, Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight());
 
         // *** END VIEWPORT *** //
+
+        this.tiledmap = new TmxMapLoader().load("core/src/map/MAP.tmx");
 
         //circuit = new Circuit(img2, 0, 0, img2.getWidth(), img2.getHeight());
         //circuit.setSize(circuit.getWidth(),circuit.getHeight());
@@ -78,13 +86,15 @@ public class MainScreen implements Screen {
                 6,
                 400,
                 100,
-                false);
+                false,
+                (TiledMapTileLayer) tiledmap.getLayers().get(0));
         car2 = new Car(car2_img, car2Braking_img, 0, 0, car2_img.getWidth(), car2_img.getHeight(),
                 800,
                 6,
                 400,
                 100,
-                true);
+                true,
+                (TiledMapTileLayer) tiledmap.getLayers().get(0));
 
         inputMultiplexer = new InputMultiplexer();
         inputMultiplexer.addProcessor(car1.carInputProcessor);
@@ -92,9 +102,9 @@ public class MainScreen implements Screen {
 
         Gdx.input.setInputProcessor(inputMultiplexer);
         // setting car position to track starting line
-        car1.setX(170f);
+        car1.setX(135f);
         car1.setY(400f);
-        car2.setX(170f + car2.getWidth()/10 + 20f);
+        car2.setX(135f + car2.getWidth()/10 + 35f);
         car2.setY(400f);
 
         car1.setSize(car1.getWidth()/10,car1.getHeight()/10);
@@ -129,6 +139,8 @@ public class MainScreen implements Screen {
         min = (totalSEC % 3600) / 60;
         hours = totalSEC / 3600;
 
+        int alturaTexto = 200;
+
         this.update();
         ScreenUtils.clear(0, 0, 0, 1);
         orthogonalTiledMapRenderer.render();
@@ -146,8 +158,8 @@ public class MainScreen implements Screen {
 
         batch.setProjectionMatrix(camera.combined);
 
-        printTime(car1,hours,min,sec);
-        bitmapFont.draw(batch,"VOLTA" + "           ? / 3", car1.getX()+70, car1.getY()+320);
+        printTime(car1,hours,min,sec,alturaTexto);
+        bitmapFont.draw(batch,"VOLTA" + "           ? / 3", car1.getX(), car1.getY()+alturaTexto);
 
         batch.end();
         // *** END BATCH CAR 1 ***
@@ -165,8 +177,8 @@ public class MainScreen implements Screen {
 
         batch.setProjectionMatrix(camera.combined);
 
-        printTime(car2,hours,min,sec);
-        bitmapFont.draw(batch,"VOLTA" + "           ? / 3", car2.getX()+70, car2.getY()+320);
+        printTime(car2,hours,min,sec,alturaTexto);
+        bitmapFont.draw(batch,"VOLTA" + "           ? / 3", car2.getX(), car2.getY()+alturaTexto);
 
         batch.end();
         // *** END BATCH CAR 2 ***
@@ -202,43 +214,44 @@ public class MainScreen implements Screen {
         img2.dispose();
     }
 
-    //PRINTAR CORRETAMENTE O TEMPO NO FORMATO 00:00:00
-    public void printTime(Car car,long hours, long min, long sec){
+    //PRINTAR CORRETAMENTE O TEMPO NO FORMATO 00.00.00
+    public void printTime(Car car,long hours, long min, long sec,int alturaTexto){
         if(hours<10){
             if(min<10){
                 if(sec<10){
-                    bitmapFont.draw(batch, "TEMPO     " + "0" + hours + ".0" + min + ".0" + sec, car.getX() + 70, car.getY() + 350);
+                    bitmapFont.draw(batch, "TEMPO     " + "0" + hours + ".0" + min + ".0" + sec, car.getX(), car.getY()+30+alturaTexto);
                 }
                 else{
-                    bitmapFont.draw(batch, "TEMPO     " + "0" + hours + ".0" + min + "." + sec, car.getX() + 70, car.getY() + 350);
+                    bitmapFont.draw(batch, "TEMPO     " + "0" + hours + ".0" + min + "." + sec, car.getX(), car.getY()+30+alturaTexto);
                 }
             }
             else{
                 if(sec<10){
-                    bitmapFont.draw(batch, "TEMPO     " + "0" + hours + "." + min + ".0" + sec, car.getX() + 70, car.getY() + 350);
+                    bitmapFont.draw(batch, "TEMPO     " + "0" + hours + "." + min + ".0" + sec, car.getX(), car.getY()+30+alturaTexto);
                 }
                 else{
-                    bitmapFont.draw(batch, "TEMPO     " + "0" + hours + "." + min + "." + sec, car.getX() + 70, car.getY() + 350);
+                    bitmapFont.draw(batch, "TEMPO     " + "0" + hours + "." + min + "." + sec, car.getX(), car.getY()+30+alturaTexto);
                 }
             }
         }
         else{
             if(min<10){
                 if(sec<10){
-                    bitmapFont.draw(batch, "TEMPO     " + "" + hours + ".0" + min + ".0" + sec, car.getX() + 70, car.getY() + 350);
+                    bitmapFont.draw(batch, "TEMPO     " + "" + hours + ".0" + min + ".0" + sec, car.getX(), car.getY()+30+alturaTexto);
                 }
                 else{
-                    bitmapFont.draw(batch, "TEMPO     " + "" + hours + ".0" + min + "." + sec, car.getX() + 70, car.getY() + 350);
+                    bitmapFont.draw(batch, "TEMPO     " + "" + hours + ".0" + min + "." + sec, car.getX(), car.getY()+30+alturaTexto);
                 }
             }
             else{
                 if(sec<10){
-                    bitmapFont.draw(batch, "TEMPO     " + "" + hours + "." + min + ".0" + sec, car.getX() + 70, car.getY() + 350);
+                    bitmapFont.draw(batch, "TEMPO     " + "" + hours + "." + min + ".0" + sec, car.getX(), car.getY()+30+alturaTexto);
                 }
                 else{
-                    bitmapFont.draw(batch, "TEMPO     " + "" + hours + "." + min + "." + sec, car.getX() + 70, car.getY() + 350);
+                    bitmapFont.draw(batch, "TEMPO     " + "" + hours + "." + min + "." + sec, car.getX(), car.getY()+30+alturaTexto);
                 }
             }
         }
     }
+
 }
