@@ -137,47 +137,50 @@ public class Car extends Sprite {
 
             // reagir a colisao em X
             if(collisionX){
-                setX(oldX);
+                sine = (float)Math.sin(  Math.toRadians( -this.getRotation()) );
+                cosine = (float)Math.cos( Math.toRadians( -this.getRotation()) );
+                this.setX(this.getX()-5*sine*this.carVelocity*delta);
+                this.setY(this.getY()-5*cosine*this.carVelocity*delta);
                 this.carVelocity = 0;
                 carState = carIsIdle;
                 carAcceleration=0;
             }
-
-            // *** CHECANDO COLISOES EM Y ***
-            //bottom left
-            collisionY = (collisionLayer.getCell((int) (getX() / tileWidht), (int) (getY() / tileHeight))!=null) ? true : false;
-
-            //bottom middle
-            if(!collisionY){
-                collisionY = (collisionLayer.getCell((int) ((getX() + getWidth()/2) / tileWidht), (int) (getY() / tileHeight))!=null) ? true : false;
-            }
-
-            //bottom right
-            if(!collisionY){
-                collisionY = (collisionLayer.getCell((int) ((getX() + getWidth()) / tileWidht), (int) (getY() / tileHeight))!=null) ? true : false;
-            }
-
-            //top left
-            if(!collisionY){
-                collisionY = (collisionLayer.getCell((int) (getX() / tileWidht), (int) ((getY() + getHeight()) / tileHeight))!=null) ? true : false;
-            }
-            //top middle
-            if(!collisionY){
-                collisionY = (collisionLayer.getCell((int) ((getX() + getWidth()/2) / tileWidht), (int) ((getY() + getHeight()) / tileHeight))!=null) ? true : false;
-            }
-
-            //top right
-            if(!collisionY){
-                collisionY = (collisionLayer.getCell((int) ((getX() + getWidth()) / tileWidht), (int) ((getY() + getHeight()) / tileHeight))!=null) ? true : false;
-            }
-
-            // reagir a colisao em Y
-            if(collisionY){
-                setY(oldY);
-                this.carVelocity = 0;
-                carState = carIsIdle;
-                carAcceleration=0;
-            }
+//
+//            // *** CHECANDO COLISOES EM Y ***
+//            //bottom left
+//            collisionY = (collisionLayer.getCell((int) (getX() / tileWidht), (int) (getY() / tileHeight))!=null) ? true : false;
+//
+//            //bottom middle
+//            if(!collisionY){
+//                collisionY = (collisionLayer.getCell((int) ((getX() + getWidth()/2) / tileWidht), (int) (getY() / tileHeight))!=null) ? true : false;
+//            }
+//
+//            //bottom right
+//            if(!collisionY){
+//                collisionY = (collisionLayer.getCell((int) ((getX() + getWidth()) / tileWidht), (int) (getY() / tileHeight))!=null) ? true : false;
+//            }
+//
+//            //top left
+//            if(!collisionY){
+//                collisionY = (collisionLayer.getCell((int) (getX() / tileWidht), (int) ((getY() + getHeight()) / tileHeight))!=null) ? true : false;
+//            }
+//            //top middle
+//            if(!collisionY){
+//                collisionY = (collisionLayer.getCell((int) ((getX() + getWidth()/2) / tileWidht), (int) ((getY() + getHeight()) / tileHeight))!=null) ? true : false;
+//            }
+//
+//            //top right
+//            if(!collisionY){
+//                collisionY = (collisionLayer.getCell((int) ((getX() + getWidth()) / tileWidht), (int) ((getY() + getHeight()) / tileHeight))!=null) ? true : false;
+//            }
+//
+//            // reagir a colisao em Y
+//            if(collisionY){
+//                setY(oldY);
+//                this.carVelocity = 0;
+//                carState = carIsIdle;
+//                carAcceleration=0;
+//            }
         }
 
         timer+=delta;
