@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.MapLayer;
 import com.badlogic.gdx.maps.MapLayers;
+import com.badlogic.gdx.maps.MapProperties;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 
 public class Car extends Sprite {
@@ -59,6 +60,7 @@ public class Car extends Sprite {
     }
 
     public void update(float delta){
+        System.out.println(getRotation()+"");
 //        System.out.printf("v%.0f\t%.0f\n",carVelocity,carAcceleration);
 
         // se o carro estiver se movendo, então ele pode virar:
@@ -98,87 +100,83 @@ public class Car extends Sprite {
         float oldX = getX(), oldY = getY(), tileWidht = collisionLayer.getTileWidth(), tileHeight = collisionLayer.getTileHeight();
         boolean collisionX = false, collisionY = false;
 
-        if(this.carVelocity > 0.5){
+//        if(this.carVelocity > 0.5){
+        if(carState != carIsIdle){
             // *** CHECANDO COLISOES EM X ***
-
+            System.out.println((int)(getX()/tileWidht)+", "+(int)(getY()/tileHeight));
+            MapProperties auxx;
             //top left
-            collisionX = collisionLayer.getCell((int)(getX() / tileWidht),(int)((getY() + getHeight()) / tileHeight))
-                    .getTile().getProperties().containsKey("blocked");
+
+            collisionX = (collisionLayer.getCell((int)(getX() / tileWidht),(int)((getY() + getHeight()) / tileHeight))!=null) ? true : false;
 
             //middle left
             if(!collisionX){ //se nao colidiu ainda, checar colisao
-                collisionX = collisionLayer.getCell((int)(getX() / tileWidht),(int)((getY() + getHeight()/2) / tileHeight))
-                        .getTile().getProperties().containsKey("blocked");
+                collisionX = (collisionLayer.getCell((int)(getX() / tileWidht),(int)((getY() + getHeight()/2) / tileHeight))!=null) ? true : false;
             }
 
             //bottom left
             if(!collisionX){ //se nao colidiu ainda, checar colisao
-                collisionX = collisionLayer.getCell((int) (getX() / tileWidht), (int) (getY() / tileHeight))
-                        .getTile().getProperties().containsKey("blocked");
+                collisionX = (collisionLayer.getCell((int) (getX() / tileWidht), (int) (getY() / tileHeight))!=null) ? true : false;
             }
 
             //top right
             if(!collisionX) { //se nao colidiu ainda, checar colisao
-                collisionX = collisionLayer.getCell((int) ((getX() + getWidth()) / tileWidht), (int) ((getY() + getHeight()) / tileHeight))
-                        .getTile().getProperties().containsKey("blocked");
+                collisionX = (collisionLayer.getCell((int) ((getX() + getWidth()) / tileWidht), (int) ((getY() + getHeight()) / tileHeight))!=null) ? true : false;
             }
 
             //middle right
             if(!collisionX) { //se nao colidiu ainda, checar colisao
-                collisionX = collisionLayer.getCell((int) ((getX() + getWidth()) / tileWidht), (int) (((getY() + getHeight()) / 2) / tileHeight))
-                        .getTile().getProperties().containsKey("blocked");
+                collisionX = (collisionLayer.getCell((int) ((getX() + getWidth()) / tileWidht), (int) (((getY() + getHeight()) / 2) / tileHeight))!=null) ? true : false;
             }
 
             //bottom right
             if(!collisionX) { //se nao colidiu ainda, checar colisao
-                collisionX = collisionLayer.getCell((int) ((getX() + getWidth()) / tileWidht), (int) (getY() / tileHeight))
-                        .getTile().getProperties().containsKey("blocked");
+                collisionX = (collisionLayer.getCell((int) ((getX() + getWidth()) / tileWidht), (int) (getY() / tileHeight))!=null) ?
+                        true : false;
             }
 
             // reagir a colisao em X
             if(collisionX){
                 setX(oldX);
                 this.carVelocity = 0;
+                carState = carIsIdle;
+                carAcceleration=0;
             }
 
             // *** CHECANDO COLISOES EM Y ***
             //bottom left
-            collisionY = collisionLayer.getCell((int) (getX() / tileWidht), (int) (getY() / tileHeight))
-                    .getTile().getProperties().containsKey("blocked");
+            collisionY = (collisionLayer.getCell((int) (getX() / tileWidht), (int) (getY() / tileHeight))!=null) ? true : false;
 
             //bottom middle
             if(!collisionY){
-                collisionY = collisionLayer.getCell((int) ((getX() + getWidth()/2) / tileWidht), (int) (getY() / tileHeight))
-                        .getTile().getProperties().containsKey("blocked");
+                collisionY = (collisionLayer.getCell((int) ((getX() + getWidth()/2) / tileWidht), (int) (getY() / tileHeight))!=null) ? true : false;
             }
 
             //bottom right
             if(!collisionY){
-                collisionY = collisionLayer.getCell((int) ((getX() + getWidth()) / tileWidht), (int) (getY() / tileHeight))
-                        .getTile().getProperties().containsKey("blocked");
+                collisionY = (collisionLayer.getCell((int) ((getX() + getWidth()) / tileWidht), (int) (getY() / tileHeight))!=null) ? true : false;
             }
 
             //top left
             if(!collisionY){
-                collisionY = collisionLayer.getCell((int) (getX() / tileWidht), (int) ((getY() + getHeight()) / tileHeight))
-                        .getTile().getProperties().containsKey("blocked");
+                collisionY = (collisionLayer.getCell((int) (getX() / tileWidht), (int) ((getY() + getHeight()) / tileHeight))!=null) ? true : false;
             }
             //top middle
             if(!collisionY){
-                collisionY = collisionLayer.getCell((int) ((getX() + getWidth()/2) / tileWidht), (int) ((getY() + getHeight()) / tileHeight))
-                        .getTile().getProperties().containsKey("blocked");
+                collisionY = (collisionLayer.getCell((int) ((getX() + getWidth()/2) / tileWidht), (int) ((getY() + getHeight()) / tileHeight))!=null) ? true : false;
             }
 
             //top right
             if(!collisionY){
-                collisionY = collisionLayer.getCell((int) ((getX() + getWidth()) / tileWidht), (int) ((getY() + getHeight()) / tileHeight))
-                        .getTile().getProperties().containsKey("blocked");
+                collisionY = (collisionLayer.getCell((int) ((getX() + getWidth()) / tileWidht), (int) ((getY() + getHeight()) / tileHeight))!=null) ? true : false;
             }
 
             // reagir a colisao em Y
             if(collisionY){
                 setY(oldY);
                 this.carVelocity = 0;
+                carState = carIsIdle;
+                carAcceleration=0;
             }
         }
 

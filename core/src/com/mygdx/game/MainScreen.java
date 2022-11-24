@@ -76,7 +76,7 @@ public class MainScreen implements Screen {
 
         // *** END VIEWPORT *** //
 
-        this.tiledmap = new TmxMapLoader().load("core/src/map/MAP.tmx");
+        this.tiledmap = new TmxMapLoader().load("core/src/map/map.tmx");
 
         //circuit = new Circuit(img2, 0, 0, img2.getWidth(), img2.getHeight());
         //circuit.setSize(circuit.getWidth(),circuit.getHeight());
@@ -87,14 +87,14 @@ public class MainScreen implements Screen {
                 400,
                 100,
                 false,
-                (TiledMapTileLayer) tiledmap.getLayers().get(0));
+                (TiledMapTileLayer) tiledmap.getLayers().get("PAREDE"));
         car2 = new Car(car2_img, car2Braking_img, 0, 0, car2_img.getWidth(), car2_img.getHeight(),
                 800,
                 6,
                 400,
                 100,
                 true,
-                (TiledMapTileLayer) tiledmap.getLayers().get(0));
+                (TiledMapTileLayer) tiledmap.getLayers().get("PAREDE"));
 
         inputMultiplexer = new InputMultiplexer();
         inputMultiplexer.addProcessor(car1.carInputProcessor);
