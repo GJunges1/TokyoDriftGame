@@ -13,7 +13,7 @@ public class DesktopLauncher {
 		config.useVsync(false);
 		config.setTitle("TokyoDrift");
 //		config.setWindowedMode(1600, 928);
-		config.setWindowedMode(1368/2, 720/2);
+		config.setWindowedMode(1368, 720);
 		new Lwjgl3Application(new MyGdxGame(), config);
 	}
 }

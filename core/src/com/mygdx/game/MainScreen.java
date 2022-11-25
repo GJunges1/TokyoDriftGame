@@ -26,9 +26,7 @@ public class MainScreen implements Screen {
     public static Texture car1_img, img2, car2_img, car1Braking_img, car2Braking_img;
     OrthographicCamera camera;
     SpriteBatch batch;
-    ShapeRenderer shape;
     Car car1,car2;
-    Circuit circuit;
     Viewport carViewport1;
     Viewport carViewport2;
     InputMultiplexer inputMultiplexer;
@@ -53,10 +51,8 @@ public class MainScreen implements Screen {
 
         ref = this;
         batch = new SpriteBatch();
-        shape = new ShapeRenderer();
         car1_img = new Texture("car1.png");
         car2_img = new Texture("car2.png");
-        //img2 = new Texture("map.png");
 
         // *** START GAMBIARRA CAR BREAKING TEXTURE ***//
         car1Braking_img = new Texture("car1_braking.png");
@@ -155,14 +151,17 @@ public class MainScreen implements Screen {
         //circuit.draw(batch,delta);
         car1.draw(batch, delta);
         car2.draw(batch, delta);
-
         batch.setProjectionMatrix(camera.combined);
+
 
         printTime(car1,hours,min,sec,alturaTexto);
         bitmapFont.draw(batch,"VOLTA" + "           ? / 3", car1.getX(), car1.getY()+alturaTexto);
 
         batch.end();
+
         // *** END BATCH CAR 1 ***
+
+        batch.setProjectionMatrix(camera.combined);
 
         // *** START BATCH CAR 2 ***
         batch.begin();
@@ -176,14 +175,17 @@ public class MainScreen implements Screen {
         //circuit.draw(batch,delta);
         car1.draw(batch, delta);
         car2.draw(batch, delta);
-
         batch.setProjectionMatrix(camera.combined);
+
 
         printTime(car2,hours,min,sec,alturaTexto);
         bitmapFont.draw(batch,"VOLTA" + "           ? / 3", car2.getX(), car2.getY()+alturaTexto);
 
         batch.end();
         // *** END BATCH CAR 2 ***
+
+        batch.setProjectionMatrix(camera.combined);
+
 
         car1.update(delta); // UPDATE CARS POSITIONS
         car2.update(delta); // '                   '

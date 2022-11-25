@@ -1,8 +1,10 @@
 package com.mygdx.game.car;
 
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.maps.MapLayer;
 import com.badlogic.gdx.maps.MapLayers;
 import com.badlogic.gdx.maps.MapProperties;
@@ -23,6 +25,16 @@ public class Car extends Sprite {
     float carAcceleration;
     float carVelocity;
     float carAngularVelocity;
+
+    float topL_X,topL_Y;
+    float topR_X,topR_Y;
+    float midL_X,midL_Y;
+    float midR_X,midR_Y;
+    float botL_X,botL_Y;
+    float botR_X,botR_Y;
+    float[] vertices;
+    float oldX, oldY;
+    float tileWidth,tileHeight;
 
     // car flags
     int carState;
@@ -56,13 +68,14 @@ public class Car extends Sprite {
         this.carFriction = -40; // o quanto o carro sofre atrito do chão
         this.movingDirection=1;
         this.collisionLayer = collisionLayer;
+        tileWidth = collisionLayer.getTileWidth();
+        tileHeight = collisionLayer.getTileHeight();
+        oldX = getX();
+        oldY = getY();
         ref = this;
     }
 
     public void update(float delta){
-        System.out.println(getRotation()+"");
-//        System.out.printf("v%.0f\t%.0f\n",carVelocity,carAcceleration);
-
         // se o carro estiver se movendo, então ele pode virar:
         if(Math.abs(this.carVelocity)>=0.05) {
             this.rotate(carAngularVelocity*delta*movingDirection);
@@ -97,93 +110,76 @@ public class Car extends Sprite {
         this.setX(this.getX()+sine*this.carVelocity*delta);
         this.setY(this.getY()+cosine*this.carVelocity*delta);
 
-        float oldX = getX(), oldY = getY(), tileWidht = collisionLayer.getTileWidth(), tileHeight = collisionLayer.getTileHeight();
-        boolean collisionX = false, collisionY = false;
+        // Calculando vertices do carro
+        vertices = this.getVertices();
+        botL_X = vertices[SpriteBatch.X1];
+        botL_Y = vertices[SpriteBatch.Y1];
+        topL_X = vertices[SpriteBatch.X2];
+        topL_Y = vertices[SpriteBatch.Y2];
+        topR_X = vertices[SpriteBatch.X3];
+        topR_Y = vertices[SpriteBatch.Y3];
+        botR_X = vertices[SpriteBatch.X4];
+        botR_Y = vertices[SpriteBatch.Y4];
+        midR_X = (topR_X + botR_X)/2;
+        midR_Y = (topR_Y + botR_Y)/2;
+        midL_X = (topL_X + botL_X)/2;
+        midL_Y = (topL_Y + botL_Y)/2;
+
+
+        boolean collision;
 
 //        if(this.carVelocity > 0.5){
         if(carState != carIsIdle){
-            // *** CHECANDO COLISOES EM X ***
-            System.out.println((int)(getX()/tileWidht)+", "+(int)(getY()/tileHeight));
-            MapProperties auxx;
+            
+            // *** CHECANDO COLISOES ***
             //top left
 
-            collisionX = (collisionLayer.getCell((int)(getX() / tileWidht),(int)((getY() + getHeight()) / tileHeight))!=null) ? true : false;
+            collision = checkCollision(topL_X,topL_Y);
 
             //middle left
-            if(!collisionX){ //se nao colidiu ainda, checar colisao
-                collisionX = (collisionLayer.getCell((int)(getX() / tileWidht),(int)((getY() + getHeight()/2) / tileHeight))!=null) ? true : false;
+            if(!collision){ //se nao colidiu ainda, checar colisao
+                collision = checkCollision(midL_X,midL_Y);
             }
 
             //bottom left
-            if(!collisionX){ //se nao colidiu ainda, checar colisao
-                collisionX = (collisionLayer.getCell((int) (getX() / tileWidht), (int) (getY() / tileHeight))!=null) ? true : false;
+            if(!collision){ //se nao colidiu ainda, checar colisao
+                collision = checkCollision(botL_X,botL_Y);
             }
 
             //top right
-            if(!collisionX) { //se nao colidiu ainda, checar colisao
-                collisionX = (collisionLayer.getCell((int) ((getX() + getWidth()) / tileWidht), (int) ((getY() + getHeight()) / tileHeight))!=null) ? true : false;
+            if(!collision) { //se nao colidiu ainda, checar colisao
+                collision = checkCollision(topR_X,topR_Y);
             }
 
             //middle right
-            if(!collisionX) { //se nao colidiu ainda, checar colisao
-                collisionX = (collisionLayer.getCell((int) ((getX() + getWidth()) / tileWidht), (int) (((getY() + getHeight()) / 2) / tileHeight))!=null) ? true : false;
+            if(!collision) { //se nao colidiu ainda, checar colisao
+                collision = checkCollision(midR_X,midR_Y);
             }
 
             //bottom right
-            if(!collisionX) { //se nao colidiu ainda, checar colisao
-                collisionX = (collisionLayer.getCell((int) ((getX() + getWidth()) / tileWidht), (int) (getY() / tileHeight))!=null) ?
-                        true : false;
+            if(!collision) { //se nao colidiu ainda, checar colisao
+                collision = checkCollision(botR_X,botR_Y);
             }
 
             // reagir a colisao em X
-            if(collisionX){
+            if(collision){
                 sine = (float)Math.sin(  Math.toRadians( -this.getRotation()) );
                 cosine = (float)Math.cos( Math.toRadians( -this.getRotation()) );
-                this.setX(this.getX()-5*sine*this.carVelocity*delta);
-                this.setY(this.getY()-5*cosine*this.carVelocity*delta);
+                this.setX(this.getX()-2*sine*this.carVelocity*delta);
+                this.setY(this.getY()-2*cosine*this.carVelocity*delta);
                 this.carVelocity = 0;
                 carState = carIsIdle;
                 carAcceleration=0;
             }
-//
-//            // *** CHECANDO COLISOES EM Y ***
-//            //bottom left
-//            collisionY = (collisionLayer.getCell((int) (getX() / tileWidht), (int) (getY() / tileHeight))!=null) ? true : false;
-//
-//            //bottom middle
-//            if(!collisionY){
-//                collisionY = (collisionLayer.getCell((int) ((getX() + getWidth()/2) / tileWidht), (int) (getY() / tileHeight))!=null) ? true : false;
-//            }
-//
-//            //bottom right
-//            if(!collisionY){
-//                collisionY = (collisionLayer.getCell((int) ((getX() + getWidth()) / tileWidht), (int) (getY() / tileHeight))!=null) ? true : false;
-//            }
-//
-//            //top left
-//            if(!collisionY){
-//                collisionY = (collisionLayer.getCell((int) (getX() / tileWidht), (int) ((getY() + getHeight()) / tileHeight))!=null) ? true : false;
-//            }
-//            //top middle
-//            if(!collisionY){
-//                collisionY = (collisionLayer.getCell((int) ((getX() + getWidth()/2) / tileWidht), (int) ((getY() + getHeight()) / tileHeight))!=null) ? true : false;
-//            }
-//
-//            //top right
-//            if(!collisionY){
-//                collisionY = (collisionLayer.getCell((int) ((getX() + getWidth()) / tileWidht), (int) ((getY() + getHeight()) / tileHeight))!=null) ? true : false;
-//            }
-//
-//            // reagir a colisao em Y
-//            if(collisionY){
-//                setY(oldY);
-//                this.carVelocity = 0;
-//                carState = carIsIdle;
-//                carAcceleration=0;
-//            }
         }
-
+        oldX = getX();
+        oldY = getY();
         timer+=delta;
+    }
+    boolean checkCollision(float X, float Y){
+        boolean value = collisionLayer.getCell((int)(X / tileWidth),
+                (int)(Y / tileHeight))!=null ? true : false;
+        return value;
     }
     private boolean carFinishedBrakingFrictioning(){
         return (Math.abs(carVelocity)<0.5);
