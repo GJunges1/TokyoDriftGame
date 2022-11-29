@@ -33,7 +33,7 @@ public class Car extends Sprite {
     float botL_X,botL_Y;
     float botR_X,botR_Y;
     float[] vertices;
-    float oldX, oldY;
+    float oldX, oldY, oldRotation;
     float tileWidth,tileHeight;
 
     // car flags
@@ -72,6 +72,7 @@ public class Car extends Sprite {
         tileHeight = collisionLayer.getTileHeight();
         oldX = getX();
         oldY = getY();
+        oldRotation = getRotation();
         ref = this;
     }
 
@@ -163,18 +164,21 @@ public class Car extends Sprite {
 
             // reagir a colisao em X
             if(collision){
-                sine = (float)Math.sin(  Math.toRadians( -this.getRotation()) );
-                cosine = (float)Math.cos( Math.toRadians( -this.getRotation()) );
-                this.setX(this.getX()-2*sine*this.carVelocity*delta);
-                this.setY(this.getY()-2*cosine*this.carVelocity*delta);
-                this.carVelocity = 0;
+                restoreLastCarState();
+                carVelocity = 0;
+                carAcceleration = 0;
                 carState = carIsIdle;
-                carAcceleration=0;
             }
         }
         oldX = getX();
         oldY = getY();
+        oldRotation = getRotation();
         timer+=delta;
+    }
+    void restoreLastCarState(){
+        setX(oldX);
+        setY(oldY);
+        setRotation(oldRotation);
     }
     boolean checkCollision(float X, float Y){
         boolean value = collisionLayer.getCell((int)(X / tileWidth),
