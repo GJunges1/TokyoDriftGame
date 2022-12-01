@@ -70,9 +70,7 @@ public class Car extends Sprite {
         this.collisionLayer = collisionLayer;
         tileWidth = collisionLayer.getTileWidth();
         tileHeight = collisionLayer.getTileHeight();
-        oldX = getX();
-        oldY = getY();
-        oldRotation = getRotation();
+        updateCarOldStates();
         ref = this;
     }
 
@@ -164,18 +162,23 @@ public class Car extends Sprite {
 
             // reagir a colisao em X
             if(collision){
-                restoreLastCarState();
+                restoreCarLastState();
                 carVelocity = 0;
                 carAcceleration = 0;
                 carState = carIsIdle;
             }
         }
+
+        updateCarOldStates();
+        timer+=delta;
+    }
+
+    void updateCarOldStates(){
         oldX = getX();
         oldY = getY();
         oldRotation = getRotation();
-        timer+=delta;
     }
-    void restoreLastCarState(){
+    void restoreCarLastState(){
         setX(oldX);
         setY(oldY);
         setRotation(oldRotation);
