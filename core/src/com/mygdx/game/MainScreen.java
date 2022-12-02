@@ -188,8 +188,8 @@ public class MainScreen implements Screen {
         batch.setProjectionMatrix(camera.combined);
 
 
-        car1.update(delta); // UPDATE CARS POSITIONS
-        car2.update(delta); // '                   '
+        car1.update(delta,car2); // UPDATE CARS POSITIONS
+        car2.update(delta,car1); // '                   '
     }
 
     @Override

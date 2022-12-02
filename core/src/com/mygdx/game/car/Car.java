@@ -1,13 +1,8 @@
 package com.mygdx.game.car;
 
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.maps.MapLayer;
-import com.badlogic.gdx.maps.MapLayers;
-import com.badlogic.gdx.maps.MapProperties;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 
 public class Car extends Sprite {
@@ -74,11 +69,28 @@ public class Car extends Sprite {
         ref = this;
     }
 
-    public void update(float delta){
-        // se o carro estiver se movendo, então ele pode virar:
-        if(Math.abs(this.carVelocity)>=0.05) {
-            this.rotate(carAngularVelocity*delta*movingDirection);
-        }
+    public void update(float delta, Car otherCar){
+
+        // handle car according to state
+        carStateLogic();
+
+        // update car velocity, position and rotation
+        updateCarVelocityPositionAndRotation(delta);
+
+        // detects and handles car-car collisions...
+        handleCollisionBetweenCars(otherCar);
+
+        // ... and car-wall collisions
+        handleWallCollision();
+
+        // update car old states (old X, old Y, old rotation)
+        updateCarOldStates();
+
+        // add delta to timer
+        timer+=delta;
+    }
+
+    private void carStateLogic() {
         switch(carState){
             case carIsIdle:
                 break;
@@ -103,12 +115,23 @@ public class Car extends Sprite {
                 }
                 break;
         }
+    }
+
+    private void updateCarVelocityPositionAndRotation(float delta) {
+        // rotation: if car's moving then it can turn:
+        if(Math.abs(this.carVelocity)>=0.05) {
+            this.rotate(carAngularVelocity*delta*movingDirection);
+        }
+
+        // updating car velocity and position
         this.carVelocity += this.carAcceleration * delta;
         float sine = (float)Math.sin(  Math.toRadians( -this.getRotation()) );
         float cosine = (float)Math.cos( Math.toRadians( -this.getRotation()) );
         this.setX(this.getX()+sine*this.carVelocity*delta);
         this.setY(this.getY()+cosine*this.carVelocity*delta);
+    }
 
+    private void handleWallCollision() {
         // Calculando vertices do carro
         vertices = this.getVertices();
         botL_X = vertices[SpriteBatch.X1];
@@ -129,48 +152,71 @@ public class Car extends Sprite {
 
 //        if(this.carVelocity > 0.5){
         if(carState != carIsIdle){
-            
+
             // *** CHECANDO COLISOES ***
             //top left
 
-            collision = checkCollision(topL_X,topL_Y);
+            collision = checkWallCollision(topL_X,topL_Y);
 
             //middle left
             if(!collision){ //se nao colidiu ainda, checar colisao
-                collision = checkCollision(midL_X,midL_Y);
+                collision = checkWallCollision(midL_X,midL_Y);
             }
 
             //bottom left
             if(!collision){ //se nao colidiu ainda, checar colisao
-                collision = checkCollision(botL_X,botL_Y);
+                collision = checkWallCollision(botL_X,botL_Y);
             }
 
             //top right
             if(!collision) { //se nao colidiu ainda, checar colisao
-                collision = checkCollision(topR_X,topR_Y);
+                collision = checkWallCollision(topR_X,topR_Y);
             }
 
             //middle right
             if(!collision) { //se nao colidiu ainda, checar colisao
-                collision = checkCollision(midR_X,midR_Y);
+                collision = checkWallCollision(midR_X,midR_Y);
             }
 
             //bottom right
             if(!collision) { //se nao colidiu ainda, checar colisao
-                collision = checkCollision(botR_X,botR_Y);
+                collision = checkWallCollision(botR_X,botR_Y);
             }
 
             // reagir a colisao em X
             if(collision){
-                restoreCarLastState();
+                restoreCarLastState(this);
                 carVelocity = 0;
                 carAcceleration = 0;
                 carState = carIsIdle;
             }
         }
+    }
 
-        updateCarOldStates();
-        timer+=delta;
+    private void handleCollisionBetweenCars(Car otherCar) {
+        if(checkCarCollision(otherCar)){
+            // calculate the cosine between cars angles
+            float cosine = (float)Math.cos(Math.toRadians( this.getRotation() - otherCar.getRotation()));
+
+            // update cars velocities pos-collision based on the cosine
+            float newCarVelocity = (this.carVelocity + cosine * otherCar.carVelocity)/2;
+            float newOtherCarVelocity = (otherCar.carVelocity + cosine * this.carVelocity)/2;
+            this.carVelocity = newCarVelocity;
+            otherCar.carVelocity = newOtherCarVelocity;
+
+            // restore cars last position
+            restoreCarLastState(this);
+            restoreCarLastState(otherCar);
+
+            // if any car is not "being accelerated", change it's state to frictioning
+            if(this.carState != carIsAccelerating && this.carState != carIsBraking){
+                this.carState = carIsFrictioning;
+            }
+            if(otherCar.carState != carIsAccelerating && otherCar.carState != carIsBraking){
+                otherCar.carState = carIsFrictioning;
+            }
+
+        }
     }
 
     void updateCarOldStates(){
@@ -178,15 +224,19 @@ public class Car extends Sprite {
         oldY = getY();
         oldRotation = getRotation();
     }
-    void restoreCarLastState(){
-        setX(oldX);
-        setY(oldY);
-        setRotation(oldRotation);
+    void restoreCarLastState(Car car){
+        car.setX(car.oldX);
+        car.setY(car.oldY);
+        car.setRotation(car.oldRotation);
     }
-    boolean checkCollision(float X, float Y){
+    boolean checkWallCollision(float X, float Y){
         boolean value = collisionLayer.getCell((int)(X / tileWidth),
                 (int)(Y / tileHeight))!=null ? true : false;
         return value;
+    }
+    boolean checkCarCollision(Car otherCar){
+        return this.getBoundingRectangle()
+                .overlaps(otherCar.getBoundingRectangle());
     }
     private boolean carFinishedBrakingFrictioning(){
         return (Math.abs(carVelocity)<0.5);
@@ -257,7 +307,4 @@ public class Car extends Sprite {
         this.carAngularVelocity -= - carHandling;
     }
 
-    public void checkCollision(){
-
-    }
 }
