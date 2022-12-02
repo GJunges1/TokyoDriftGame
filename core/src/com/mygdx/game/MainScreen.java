@@ -9,7 +9,6 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
@@ -18,7 +17,6 @@ import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.mygdx.game.car.Car;
-import com.mygdx.game.circuit.Circuit;
 import helper.TileMapHelper;
 
 public class MainScreen implements Screen {
@@ -41,6 +39,7 @@ public class MainScreen implements Screen {
     private TileMapHelper tileMapHelper;
 
     private TiledMap tiledmap;
+    private TiledMapTileLayer[] checkpointLayers;
 
     @Override
     public void show() {
@@ -74,6 +73,11 @@ public class MainScreen implements Screen {
 
         this.tiledmap = new TmxMapLoader().load("core/src/map/map.tmx");
 
+        checkpointLayers = new TiledMapTileLayer[3];
+        checkpointLayers[0] = (TiledMapTileLayer) tiledmap.getLayers().get("CHEGADA");
+        checkpointLayers[1] = (TiledMapTileLayer) tiledmap.getLayers().get("CHECKPOINT1");
+        checkpointLayers[2] = (TiledMapTileLayer) tiledmap.getLayers().get("CHECKPOINT2");
+
         //circuit = new Circuit(img2, 0, 0, img2.getWidth(), img2.getHeight());
         //circuit.setSize(circuit.getWidth(),circuit.getHeight());
 
@@ -83,14 +87,16 @@ public class MainScreen implements Screen {
                 400,
                 100,
                 false,
-                (TiledMapTileLayer) tiledmap.getLayers().get("PAREDE"));
+                (TiledMapTileLayer) tiledmap.getLayers().get("PAREDE"),
+                checkpointLayers);
         car2 = new Car(car2_img, car2Braking_img, 0, 0, car2_img.getWidth(), car2_img.getHeight(),
                 800,
                 6,
                 400,
                 100,
                 true,
-                (TiledMapTileLayer) tiledmap.getLayers().get("PAREDE"));
+                (TiledMapTileLayer) tiledmap.getLayers().get("PAREDE"),
+                checkpointLayers);
 
         inputMultiplexer = new InputMultiplexer();
         inputMultiplexer.addProcessor(car1.carInputProcessor);
@@ -156,7 +162,7 @@ public class MainScreen implements Screen {
 
 
         printTime(car1,hours,min,sec,alturaTexto);
-        bitmapFont.draw(batch,"VOLTA" + "           ?", car1.getX()+70, car1.getY()+alturaTexto+15);
+        bitmapFont.draw(batch,"VOLTA" + "           "+car1.getCarLap(), car1.getX()+70, car1.getY()+alturaTexto+15);
 
         batch.end();
 
@@ -180,7 +186,7 @@ public class MainScreen implements Screen {
 
 
         printTime(car2,hours,min,sec,alturaTexto);
-        bitmapFont.draw(batch,"VOLTA" + "           ?", car2.getX()+70, car2.getY()+alturaTexto+15);
+        bitmapFont.draw(batch,"VOLTA" + "           "+car2.getCarLap(), car2.getX()+70, car2.getY()+alturaTexto+15);
 
         batch.end();
         // *** END BATCH CAR 2 ***
