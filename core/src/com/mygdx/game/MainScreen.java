@@ -42,6 +42,8 @@ public class MainScreen implements Screen {
 
     private TiledMap tiledmap;
 
+    private String NameTAG1,NameTAG2;
+
     @Override
     public void show() {
         // *** START TILED MAP ***//
@@ -98,7 +100,7 @@ public class MainScreen implements Screen {
 
         Gdx.input.setInputProcessor(inputMultiplexer);
         // setting car position to track starting line
-        float positionX = 95;
+        float positionX = 137;
         float positionY = 380;
         car1.setX(positionX);
         car1.setY(positionY);
@@ -110,6 +112,9 @@ public class MainScreen implements Screen {
 
         car2.setSize(car2.getWidth()/10,car2.getHeight()/10);
         car2.setOriginCenter();
+
+        NameTAG1 = "daniel";
+        NameTAG2 = "junges";
 
 
         // *** START MUSIC *** //
@@ -157,6 +162,7 @@ public class MainScreen implements Screen {
 
         printTime(car1,hours,min,sec,alturaTexto);
         bitmapFont.draw(batch,"VOLTA" + "           ?", car1.getX()+70, car1.getY()+alturaTexto+15);
+        //printNameTag(car2,NameTAG1);
 
         batch.end();
 
@@ -178,9 +184,9 @@ public class MainScreen implements Screen {
         car2.draw(batch, delta);
         batch.setProjectionMatrix(camera.combined);
 
-
         printTime(car2,hours,min,sec,alturaTexto);
         bitmapFont.draw(batch,"VOLTA" + "           ?", car2.getX()+70, car2.getY()+alturaTexto+15);
+        //printNameTag(car1,NameTAG2);
 
         batch.end();
         // *** END BATCH CAR 2 ***
@@ -257,6 +263,10 @@ public class MainScreen implements Screen {
                 }
             }
         }
+    }
+
+    public void printNameTag(Car car,String name){
+        bitmapFont.draw(batch, "" + name, car.getX()-car.getWidth()/2, car.getY()+car.getHeight()+15);
     }
 
 }
