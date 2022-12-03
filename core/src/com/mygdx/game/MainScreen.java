@@ -40,6 +40,11 @@ public class MainScreen implements Screen {
 
     private TiledMap tiledmap;
     private TiledMapTileLayer[] checkpointLayers;
+    private int car1Lap;
+    private int car2Lap;
+    private int totalLaps;
+    private boolean car1Finished;
+    private boolean car2Finished;
 
     @Override
     public void show() {
@@ -104,7 +109,7 @@ public class MainScreen implements Screen {
 
         Gdx.input.setInputProcessor(inputMultiplexer);
         // setting car position to track starting line
-        float positionX = 95;
+        float positionX = 140;
         float positionY = 380;
         car1.setX(positionX);
         car1.setY(positionY);
@@ -130,6 +135,8 @@ public class MainScreen implements Screen {
         // *** END MUSIC *** //
 
         startTime = System.currentTimeMillis();
+
+        totalLaps = 1;
     }
 
     private void update(){
@@ -144,6 +151,10 @@ public class MainScreen implements Screen {
         hours = totalSEC / 3600;
 
         int alturaTexto = 140;
+
+        car1Lap = car1.getCarLap();
+        car2Lap = car2.getCarLap();
+        checkFinishedRacers();
 
         ScreenUtils.clear(Color.GREEN);
 
@@ -162,7 +173,7 @@ public class MainScreen implements Screen {
 
 
         printTime(car1,hours,min,sec,alturaTexto);
-        bitmapFont.draw(batch,"VOLTA" + "           "+car1.getCarLap(), car1.getX()+70, car1.getY()+alturaTexto+15);
+        bitmapFont.draw(batch,"VOLTA" + "     "+car2Lap+" de "+totalLaps, car1.getX()+70, car1.getY()+alturaTexto+15);
 
         batch.end();
 
@@ -180,13 +191,13 @@ public class MainScreen implements Screen {
         orthogonalTiledMapRenderer.render();
 
         //circuit.draw(batch,delta);
-        car1.draw(batch, delta);
         car2.draw(batch, delta);
+        car1.draw(batch, delta);
         batch.setProjectionMatrix(camera.combined);
 
 
         printTime(car2,hours,min,sec,alturaTexto);
-        bitmapFont.draw(batch,"VOLTA" + "           "+car2.getCarLap(), car2.getX()+70, car2.getY()+alturaTexto+15);
+        bitmapFont.draw(batch,"VOLTA" + "     "+car1Lap+" de "+totalLaps, car2.getX()+70, car2.getY()+alturaTexto+15);
 
         batch.end();
         // *** END BATCH CAR 2 ***
@@ -196,6 +207,44 @@ public class MainScreen implements Screen {
 
         car1.update(delta,car2); // UPDATE CARS POSITIONS
         car2.update(delta,car1); // '                   '
+    }
+
+    private void checkFinishedRacers() {
+        if(car1Finished || car2Finished){
+            if(!car1Finished && car1Lap>=totalLaps){
+                System.out.println("Car1 Finished!");
+                inputMultiplexer.removeProcessor(car1.carInputProcessor);
+                car1Finished = true;
+            }
+            if(!car2Finished && car2Lap>=totalLaps){
+                System.out.println("Car2 Finished!");
+                inputMultiplexer.removeProcessor(car2.carInputProcessor);
+                car2Finished = true;
+            }
+
+        }
+        else{
+            if(car1Lap>=totalLaps){
+                System.out.println("Car1 Finished!");
+                inputMultiplexer.removeProcessor(car1.carInputProcessor);
+                car1Finished = true;
+            }
+            if(car2Lap>=totalLaps){
+                System.out.println("Car2 Finished!");
+                inputMultiplexer.removeProcessor(car2.carInputProcessor);
+                car2Finished = true;
+            }
+            if(car1Finished && car2Finished){
+                System.out.println("Draw!");
+            }
+            else if(car1Finished){
+                System.out.println("Car1 won the race!");
+            }
+            else if(car2Finished){
+                System.out.println("Car2 won the race");
+            }
+        }
+
     }
 
     @Override
