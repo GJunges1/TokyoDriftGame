@@ -1,4 +1,4 @@
-package com.mygdx.game;
+package com.mygdx.game.screens;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
@@ -9,7 +9,6 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
@@ -18,7 +17,6 @@ import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.mygdx.game.car.Car;
-import com.mygdx.game.circuit.Circuit;
 import helper.TileMapHelper;
 
 public class MainScreen implements Screen {
@@ -116,7 +114,6 @@ public class MainScreen implements Screen {
         NameTAG1 = "daniel";
         NameTAG2 = "junges";
 
-
         // *** START MUSIC *** //
         Music music = Gdx.audio.newMusic(Gdx.files.internal("tokyo_drift.wav"));
         music.setVolume(0.1f);
@@ -154,7 +151,6 @@ public class MainScreen implements Screen {
         camera.update();
         orthogonalTiledMapRenderer.render();
 
-        //circuit.draw(batch,delta);
         car1.draw(batch, delta);
         car2.draw(batch, delta);
         batch.setProjectionMatrix(camera.combined);
@@ -179,7 +175,6 @@ public class MainScreen implements Screen {
         camera.update();
         orthogonalTiledMapRenderer.render();
 
-        //circuit.draw(batch,delta);
         car1.draw(batch, delta);
         car2.draw(batch, delta);
         batch.setProjectionMatrix(camera.combined);
