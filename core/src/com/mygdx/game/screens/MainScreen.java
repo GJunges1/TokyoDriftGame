@@ -173,7 +173,10 @@ public class MainScreen implements Screen {
         batch.setProjectionMatrix(camera.combined);
 
 
-        printTime(car1,car2.getTotalSEC(),alturaTexto);
+        // imprimindo tempo para o carro 2:
+        bitmapFont.draw(batch, car2.formatTime(), car1.getX()+36, car1.getY()+30+alturaTexto);
+
+        // e voltas para o carro 2:
         bitmapFont.draw(batch,"VOLTA" + "     "+car2Lap+" de "+totalLaps, car1.getX()+70, car1.getY()+alturaTexto+15);
         //printNameTag(car2,NameTAG1);
 
@@ -196,7 +199,10 @@ public class MainScreen implements Screen {
         car1.draw(batch, delta);
         batch.setProjectionMatrix(camera.combined);
 
-        printTime(car2,car1.getTotalSEC(),alturaTexto);
+        // imprimindo tempo para o carro 1:
+        bitmapFont.draw(batch, car1.formatTime(), car2.getX()+36, car2.getY()+30+alturaTexto);
+
+        // e voltas para o carro 2:
         bitmapFont.draw(batch,"VOLTA" + "     "+car1Lap+" de "+totalLaps, car2.getX()+70, car2.getY()+alturaTexto+15);
         //printNameTag(car1,NameTAG2);
 
@@ -275,48 +281,7 @@ public class MainScreen implements Screen {
         img2.dispose();
     }
 
-    //PRINTAR CORRETAMENTE O TEMPO NO FORMATO 00.00.00
-    public void printTime(Car car,long totalSEC,int alturaTexto){
-        long sec = totalSEC % 60;
-        long min = (totalSEC % 3600) / 60;
-        long hours = totalSEC / 3600;
-        if(hours<10){
-            if(min<10){
-                if(sec<10){
-                    bitmapFont.draw(batch, "TEMPO     " + "0" + hours + ".0" + min + ".0" + sec, car.getX()+36, car.getY()+30+alturaTexto);
-                }
-                else{
-                    bitmapFont.draw(batch, "TEMPO     " + "0" + hours + ".0" + min + "." + sec, car.getX()+36, car.getY()+30+alturaTexto);
-                }
-            }
-            else{
-                if(sec<10){
-                    bitmapFont.draw(batch, "TEMPO     " + "0" + hours + "." + min + ".0" + sec, car.getX()+36, car.getY()+30+alturaTexto);
-                }
-                else{
-                    bitmapFont.draw(batch, "TEMPO     " + "0" + hours + "." + min + "." + sec, car.getX()+36, car.getY()+30+alturaTexto);
-                }
-            }
-        }
-        else{
-            if(min<10){
-                if(sec<10){
-                    bitmapFont.draw(batch, "TEMPO     " + "" + hours + ".0" + min + ".0" + sec, car.getX()+36, car.getY()+30+alturaTexto);
-                }
-                else{
-                    bitmapFont.draw(batch, "TEMPO     " + "" + hours + ".0" + min + "." + sec, car.getX()+36, car.getY()+30+alturaTexto);
-                }
-            }
-            else{
-                if(sec<10){
-                    bitmapFont.draw(batch, "TEMPO     " + "" + hours + "." + min + ".0" + sec, car.getX()+36, car.getY()+30+alturaTexto);
-                }
-                else{
-                    bitmapFont.draw(batch, "TEMPO     " + "" + hours + "." + min + "." + sec, car.getX()+36, car.getY()+30+alturaTexto);
-                }
-            }
-        }
-    }
+
 
     public void printNameTag(Car car,String name){
         bitmapFont.draw(batch, "" + name, car.getX()-car.getWidth()/2, car.getY()+car.getHeight()+15);

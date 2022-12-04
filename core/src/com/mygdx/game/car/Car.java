@@ -414,4 +414,13 @@ public class Car extends Sprite {
     public long getTotalSEC() {
         return totalSEC;
     }
+
+    //PRINTAR CORRETAMENTE O TEMPO NO FORMATO 00.00.00
+    public String formatTime(){
+        long sec = totalSEC % 60;
+        long min = (totalSEC % 3600) / 60;
+        long hours = totalSEC / 3600;
+        String result = String.format("TEMPO     %02d.%02d.%02d",hours, min, sec);
+        return result;
+    }
 }
