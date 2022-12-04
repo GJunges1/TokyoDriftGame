@@ -180,6 +180,10 @@ public class MainScreen implements Screen {
         bitmapFont.draw(batch,"VOLTA" + "     "+car2Lap+" de "+totalLaps, car1.getX()+70, car1.getY()+alturaTexto+15);
         //printNameTag(car2,NameTAG1);
 
+        if(car2.getFinished()){
+            bitmapFont.draw(batch,"CAR 2 FINISHED "+car2.getFormattedEndPos()+"!",car1.getX()-15, car1.getY());
+        }
+
         batch.end();
 
         // *** END BATCH CAR 1 ***
@@ -204,6 +208,10 @@ public class MainScreen implements Screen {
 
         // e voltas para o carro 2:
         bitmapFont.draw(batch,"VOLTA" + "     "+car1Lap+" de "+totalLaps, car2.getX()+70, car2.getY()+alturaTexto+15);
+
+        if(car1.getFinished()){
+            bitmapFont.draw(batch,"CAR 1 FINISHED "+car1.getFormattedEndPos()+"!",car2.getX()-15, car2.getY());
+        }
         //printNameTag(car1,NameTAG2);
 
         batch.end();
@@ -219,12 +227,12 @@ public class MainScreen implements Screen {
     private void checkFinishedRacers() {
         if(car1.getFinished() || car2.getFinished()){
             if(!car1.getFinished() && car1Lap>=totalLaps){
-                System.out.println("Car1 Finished!");
+                car1.setFinalPosition(2);
                 inputMultiplexer.removeProcessor(car1.carInputProcessor);
                 car1.setFinished(true);
             }
             if(!car2.getFinished() && car2Lap>=totalLaps){
-                System.out.println("Car2 Finished!");
+                car2.setFinalPosition(2);
                 inputMultiplexer.removeProcessor(car2.carInputProcessor);
                 car2.setFinished(true);
             }
@@ -232,26 +240,16 @@ public class MainScreen implements Screen {
         }
         else{
             if(car1Lap>=totalLaps){
-                System.out.println("Car1 Finished!");
+                car1.setFinalPosition(1);
                 inputMultiplexer.removeProcessor(car1.carInputProcessor);
                 car1.setFinished(true);
             }
             if(car2Lap>=totalLaps){
-                System.out.println("Car2 Finished!");
+                car2.setFinalPosition(1);
                 inputMultiplexer.removeProcessor(car2.carInputProcessor);
                 car2.setFinished(true);
             }
-            if(car1.getFinished() && car2.getFinished()){
-                System.out.println("Draw!");
-            }
-            else if(car1.getFinished()){
-                System.out.println("Car1 won the race!");
-            }
-            else if(car2.getFinished()){
-                System.out.println("Car2 won the race");
-            }
         }
-
     }
 
     @Override

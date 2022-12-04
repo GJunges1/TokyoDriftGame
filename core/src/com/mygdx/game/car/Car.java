@@ -54,6 +54,7 @@ public class Car extends Sprite {
     private boolean finished;
     private long totalSEC;
     private long startTime;
+    private int finalPosition;
 
     public Car(Texture img, Texture img_braking, int i, int i1, int i2, int i3,
                float carMaxVelocity,
@@ -422,5 +423,19 @@ public class Car extends Sprite {
         long hours = totalSEC / 3600;
         String result = String.format("TEMPO     %02d.%02d.%02d",hours, min, sec);
         return result;
+    }
+
+    public void setFinalPosition(int finalPosition) {
+        this.finalPosition = finalPosition;
+    }
+
+    public String getFormattedEndPos() {
+        switch (finalPosition) {
+            case 1:
+                return "1st";
+            case 2:
+                return "2nd";
+        }
+        return "?th";
     }
 }
