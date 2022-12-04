@@ -51,6 +51,7 @@ public class Car extends Sprite {
     Texture img, img_braking;
     TiledMapTileLayer collisionLayer; //TiledMapTileLayer
     private int carDebt;
+    private boolean finished;
 
     public Car(Texture img, Texture img_braking, int i, int i1, int i2, int i3,
                float carMaxVelocity,
@@ -102,7 +103,9 @@ public class Car extends Sprite {
         updateCarOldStates();
 
         // add delta to timer
-        timer+=delta;
+        if(!finished) {
+            timer += delta;
+        }
     }
 
     private void updateCarVertices() {
@@ -391,5 +394,13 @@ public class Car extends Sprite {
 
     public int getCarLap() {
         return carLap;
+    }
+
+    public boolean getFinished() {
+        return finished;
+    }
+
+    public void setFinished(boolean finished) {
+        this.finished = finished;
     }
 }

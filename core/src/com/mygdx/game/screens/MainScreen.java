@@ -44,8 +44,6 @@ public class MainScreen implements Screen {
     private int car1Lap;
     private int car2Lap;
     private int totalLaps;
-    private boolean car1Finished;
-    private boolean car2Finished;
     private String NameTAG1,NameTAG2;
 
     @Override
@@ -213,16 +211,16 @@ public class MainScreen implements Screen {
     }
 
     private void checkFinishedRacers() {
-        if(car1Finished || car2Finished){
-            if(!car1Finished && car1Lap>=totalLaps){
+        if(car1.getFinished() || car2.getFinished()){
+            if(!car1.getFinished() && car1Lap>=totalLaps){
                 System.out.println("Car1 Finished!");
                 inputMultiplexer.removeProcessor(car1.carInputProcessor);
-                car1Finished = true;
+                car1.setFinished(true);
             }
-            if(!car2Finished && car2Lap>=totalLaps){
+            if(!car2.getFinished() && car2Lap>=totalLaps){
                 System.out.println("Car2 Finished!");
                 inputMultiplexer.removeProcessor(car2.carInputProcessor);
-                car2Finished = true;
+                car2.setFinished(true);
             }
 
         }
@@ -230,20 +228,20 @@ public class MainScreen implements Screen {
             if(car1Lap>=totalLaps){
                 System.out.println("Car1 Finished!");
                 inputMultiplexer.removeProcessor(car1.carInputProcessor);
-                car1Finished = true;
+                car1.setFinished(true);
             }
             if(car2Lap>=totalLaps){
                 System.out.println("Car2 Finished!");
                 inputMultiplexer.removeProcessor(car2.carInputProcessor);
-                car2Finished = true;
+                car2.setFinished(true);
             }
-            if(car1Finished && car2Finished){
+            if(car1.getFinished() && car2.getFinished()){
                 System.out.println("Draw!");
             }
-            else if(car1Finished){
+            else if(car1.getFinished()){
                 System.out.println("Car1 won the race!");
             }
-            else if(car2Finished){
+            else if(car2.getFinished()){
                 System.out.println("Car2 won the race");
             }
         }
