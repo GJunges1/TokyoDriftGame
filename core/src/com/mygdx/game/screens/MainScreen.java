@@ -1,4 +1,5 @@
-package com.mygdx.game;
+package com.mygdx.game.screens;
+//package com.mygdx.game; //se o codigo acima der erro
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
@@ -45,6 +46,7 @@ public class MainScreen implements Screen {
     private int totalLaps;
     private boolean car1Finished;
     private boolean car2Finished;
+    private String NameTAG1,NameTAG2;
 
     @Override
     public void show() {
@@ -109,7 +111,7 @@ public class MainScreen implements Screen {
 
         Gdx.input.setInputProcessor(inputMultiplexer);
         // setting car position to track starting line
-        float positionX = 140;
+        float positionX = 137;
         float positionY = 380;
         car1.setX(positionX);
         car1.setY(positionY);
@@ -122,6 +124,8 @@ public class MainScreen implements Screen {
         car2.setSize(car2.getWidth()/10,car2.getHeight()/10);
         car2.setOriginCenter();
 
+        NameTAG1 = "daniel";
+        NameTAG2 = "junges";
 
         // *** START MUSIC *** //
         Music music = Gdx.audio.newMusic(Gdx.files.internal("tokyo_drift.wav"));
@@ -136,7 +140,7 @@ public class MainScreen implements Screen {
 
         startTime = System.currentTimeMillis();
 
-        totalLaps = 1;
+        totalLaps = 1; // definindo número de voltas da corrida
     }
 
     private void update(){
@@ -166,7 +170,6 @@ public class MainScreen implements Screen {
         camera.update();
         orthogonalTiledMapRenderer.render();
 
-        //circuit.draw(batch,delta);
         car1.draw(batch, delta);
         car2.draw(batch, delta);
         batch.setProjectionMatrix(camera.combined);
@@ -174,6 +177,7 @@ public class MainScreen implements Screen {
 
         printTime(car1,hours,min,sec,alturaTexto);
         bitmapFont.draw(batch,"VOLTA" + "     "+car2Lap+" de "+totalLaps, car1.getX()+70, car1.getY()+alturaTexto+15);
+        //printNameTag(car2,NameTAG1);
 
         batch.end();
 
@@ -190,14 +194,13 @@ public class MainScreen implements Screen {
         camera.update();
         orthogonalTiledMapRenderer.render();
 
-        //circuit.draw(batch,delta);
         car2.draw(batch, delta);
         car1.draw(batch, delta);
         batch.setProjectionMatrix(camera.combined);
 
-
         printTime(car2,hours,min,sec,alturaTexto);
         bitmapFont.draw(batch,"VOLTA" + "     "+car1Lap+" de "+totalLaps, car2.getX()+70, car2.getY()+alturaTexto+15);
+        //printNameTag(car1,NameTAG2);
 
         batch.end();
         // *** END BATCH CAR 2 ***
@@ -312,6 +315,10 @@ public class MainScreen implements Screen {
                 }
             }
         }
+    }
+
+    public void printNameTag(Car car,String name){
+        bitmapFont.draw(batch, "" + name, car.getX()-car.getWidth()/2, car.getY()+car.getHeight()+15);
     }
 
 }
