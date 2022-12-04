@@ -1,6 +1,7 @@
 package com.mygdx.game.screens;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
@@ -45,7 +46,7 @@ public class TitleScreen implements Screen {
         button.draw(batch);
         batch.end();
 
-        if(button.isWithin(Gdx.input.getX(),Gdx.input.getY())){
+        if(Gdx.input.isButtonJustPressed(Input.Buttons.LEFT) && button.isWithin(Gdx.input.getX(),Gdx.input.getY())){
             System.out.println("INICIAR");
             MyGdxGame.ref.setScreen(new MainScreen());
             this.dispose();
