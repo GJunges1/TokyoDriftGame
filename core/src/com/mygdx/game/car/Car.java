@@ -52,6 +52,8 @@ public class Car extends Sprite {
     TiledMapTileLayer collisionLayer; //TiledMapTileLayer
     private int carDebt;
     private boolean finished;
+    private long totalSEC;
+    private long startTime;
 
     public Car(Texture img, Texture img_braking, int i, int i1, int i2, int i3,
                float carMaxVelocity,
@@ -104,7 +106,8 @@ public class Car extends Sprite {
 
         // add delta to timer
         if(!finished) {
-            timer += delta;
+//            timer += delta;
+            totalSEC = (System.currentTimeMillis() - startTime)/1000;
         }
     }
 
@@ -402,5 +405,13 @@ public class Car extends Sprite {
 
     public void setFinished(boolean finished) {
         this.finished = finished;
+    }
+
+    public void setStartTime(long startTime) {
+        this.startTime = startTime;
+    }
+
+    public long getTotalSEC() {
+        return totalSEC;
     }
 }

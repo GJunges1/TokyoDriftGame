@@ -30,7 +30,6 @@ public class MainScreen implements Screen {
     Viewport carViewport2;
     InputMultiplexer inputMultiplexer;
     BitmapFont bitmapFont;
-    long startTime, totalSEC, hours, min ,sec;
 
     private Music music;
 
@@ -136,9 +135,13 @@ public class MainScreen implements Screen {
         bitmapFont = new BitmapFont(Gdx.files.internal("TokyoDrift_font.fnt"));
         // *** END MUSIC *** //
 
-        startTime = System.currentTimeMillis();
-
+        setStartTime(car1,car2,System.currentTimeMillis());
         totalLaps = 1; // definindo número de voltas da corrida
+    }
+
+    private void setStartTime(Car car1, Car car2, long startTime) {
+        car1.setStartTime(startTime);
+        car2.setStartTime(startTime);
     }
 
     private void update(){
@@ -147,10 +150,7 @@ public class MainScreen implements Screen {
 
     @Override
     public void render(float delta){
-        totalSEC = (System.currentTimeMillis() - startTime)/1000;
-        sec = totalSEC % 60;
-        min = (totalSEC % 3600) / 60;
-        hours = totalSEC / 3600;
+
 
         int alturaTexto = 140;
 
@@ -173,7 +173,7 @@ public class MainScreen implements Screen {
         batch.setProjectionMatrix(camera.combined);
 
 
-        printTime(car1,hours,min,sec,alturaTexto);
+        printTime(car1,alturaTexto);
         bitmapFont.draw(batch,"VOLTA" + "     "+car2Lap+" de "+totalLaps, car1.getX()+70, car1.getY()+alturaTexto+15);
         //printNameTag(car2,NameTAG1);
 
@@ -196,7 +196,7 @@ public class MainScreen implements Screen {
         car1.draw(batch, delta);
         batch.setProjectionMatrix(camera.combined);
 
-        printTime(car2,hours,min,sec,alturaTexto);
+        printTime(car2,alturaTexto);
         bitmapFont.draw(batch,"VOLTA" + "     "+car1Lap+" de "+totalLaps, car2.getX()+70, car2.getY()+alturaTexto+15);
         //printNameTag(car1,NameTAG2);
 
@@ -276,7 +276,11 @@ public class MainScreen implements Screen {
     }
 
     //PRINTAR CORRETAMENTE O TEMPO NO FORMATO 00.00.00
-    public void printTime(Car car,long hours, long min, long sec,int alturaTexto){
+    public void printTime(Car car,int alturaTexto){
+        long totalSEC = car.getTotalSEC();
+        long sec = totalSEC % 60;
+        long min = (totalSEC % 3600) / 60;
+        long hours = totalSEC / 3600;
         if(hours<10){
             if(min<10){
                 if(sec<10){
