@@ -3,6 +3,8 @@ package com.mygdx.game.screens;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -20,6 +22,8 @@ public class TitleScreen implements Screen {
 
     static MyMultiplexer multiplexer;
     StartButtonController startButtonController;
+    static Music music;
+    Sound sound;
 
     @Override
     public void show() {
@@ -35,6 +39,15 @@ public class TitleScreen implements Screen {
         button = new StartButton(img2);
         button.setSize(601, 272);
         button.setPosition(Gdx.graphics.getWidth()/2-button.getWidth()/2,Gdx.graphics.getHeight()/8);
+
+        // *** START MUSIC *** //
+        this.music = Gdx.audio.newMusic(Gdx.files.internal("MarioKartWii.wav"));
+        this.music.setVolume(0.05f);
+        this.music.setLooping(true);
+        this.music.play();
+        // *** END MUSIC *** //
+
+        this.sound = Gdx.audio.newSound(Gdx.files.internal("ButtonClick.wav"));
     }
 
     @Override
@@ -47,8 +60,10 @@ public class TitleScreen implements Screen {
         batch.end();
 
         if(Gdx.input.isButtonJustPressed(Input.Buttons.LEFT) && button.isWithin(Gdx.input.getX(),Gdx.input.getY())){
-            System.out.println("INICIAR");
-            MyGdxGame.ref.setScreen(new MainScreen());
+            this.music.stop();
+            this.sound.play(0.3f);
+            // Aqui tem que pular pra MainScreen()
+            MyGdxGame.ref.setScreen(new ScoreboardScreen()); //pula pra Scoreboard Screen, somente para testes
             this.dispose();
         }
     }

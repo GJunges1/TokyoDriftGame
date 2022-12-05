@@ -55,6 +55,7 @@ public class Car extends Sprite {
     private long totalSEC;
     private long startTime;
     private int finalPosition;
+    String nameTag;
 
     public Car(Texture img, Texture img_braking, int i, int i1, int i2, int i3,
                float carMaxVelocity,
@@ -62,6 +63,7 @@ public class Car extends Sprite {
                float carMaxBraking,
                float carHandling,
                final boolean isItTheRightCar,
+               String nameTag,
                TiledMapTileLayer collisionLayer,
                TiledMapTileLayer[] checkpointLayers) {
         super(img_braking, i, i1, i2, i3);
@@ -77,6 +79,7 @@ public class Car extends Sprite {
         this.movingDirection=1;
         this.collisionLayer = collisionLayer;
         this.checkpointLayers = checkpointLayers;
+        this.nameTag = nameTag;
         tileWidth = collisionLayer.getTileWidth();
         tileHeight = collisionLayer.getTileHeight();
         updateCarOldStates();
@@ -415,6 +418,8 @@ public class Car extends Sprite {
     public long getTotalSEC() {
         return totalSEC;
     }
+
+    public String getNameTag(){ return this.nameTag; }
 
     //PRINTAR CORRETAMENTE O TEMPO NO FORMATO 00.00.00
     public String formatTime(){

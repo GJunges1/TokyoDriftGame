@@ -17,6 +17,7 @@ import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import com.mygdx.game.MyGdxGame;
 import com.mygdx.game.car.Car;
 import helper.TileMapHelper;
 
@@ -25,7 +26,7 @@ public class MainScreen implements Screen {
     public static Texture car1_img, img2, car2_img, car1Braking_img, car2Braking_img;
     OrthographicCamera camera;
     SpriteBatch batch;
-    Car car1,car2;
+    public static Car car1,car2;
     Viewport carViewport1;
     Viewport carViewport2;
     InputMultiplexer inputMultiplexer;
@@ -44,7 +45,6 @@ public class MainScreen implements Screen {
     private int car2Lap;
     private int totalLaps;
     private String NameTAG1,NameTAG2;
-
     @Override
     public void show() {
         // *** START TILED MAP ***//
@@ -91,6 +91,7 @@ public class MainScreen implements Screen {
                 400,
                 100,
                 false,
+                "daniel",
                 (TiledMapTileLayer) tiledmap.getLayers().get("PAREDE"),
                 checkpointLayers);
         car2 = new Car(car2_img, car2Braking_img, 0, 0, car2_img.getWidth(), car2_img.getHeight(),
@@ -99,6 +100,7 @@ public class MainScreen implements Screen {
                 400,
                 100,
                 true,
+                "junges",
                 (TiledMapTileLayer) tiledmap.getLayers().get("PAREDE"),
                 checkpointLayers);
 
@@ -126,7 +128,7 @@ public class MainScreen implements Screen {
 
         // *** START MUSIC *** //
         Music music = Gdx.audio.newMusic(Gdx.files.internal("tokyo_drift.wav"));
-        music.setVolume(0.1f);
+        music.setVolume(0.3f);
         music.setLooping(true);
         music.play();
         // *** END MUSIC *** //
@@ -150,8 +152,6 @@ public class MainScreen implements Screen {
 
     @Override
     public void render(float delta){
-
-
         int alturaTexto = 140;
 
         car1Lap = car1.getCarLap();
@@ -172,20 +172,18 @@ public class MainScreen implements Screen {
         car2.draw(batch, delta);
         batch.setProjectionMatrix(camera.combined);
 
-
         // imprimindo tempo para o carro 2:
         bitmapFont.draw(batch, car2.formatTime(), car1.getX()+36, car1.getY()+30+alturaTexto);
 
         // e voltas para o carro 2:
-        bitmapFont.draw(batch,"VOLTA" + "     "+car2Lap+" de "+totalLaps, car1.getX()+70, car1.getY()+alturaTexto+15);
+        bitmapFont.draw(batch,"VOLTA" + "     " + car2Lap + " de " + totalLaps, car1.getX()+50, car1.getY()+alturaTexto+15);
         //printNameTag(car2,NameTAG1);
 
         if(car2.getFinished()){
-            bitmapFont.draw(batch,"CAR 2 FINISHED "+car2.getFormattedEndPos()+"!",car1.getX()-15, car1.getY());
+            bitmapFont.draw(batch,"CAR 2 FINISHED " + car2.getFormattedEndPos() + "!",car1.getX()-15, car1.getY());
         }
 
         batch.end();
-
         // *** END BATCH CAR 1 ***
 
         batch.setProjectionMatrix(camera.combined);
@@ -207,21 +205,28 @@ public class MainScreen implements Screen {
         bitmapFont.draw(batch, car1.formatTime(), car2.getX()+36, car2.getY()+30+alturaTexto);
 
         // e voltas para o carro 2:
-        bitmapFont.draw(batch,"VOLTA" + "     "+car1Lap+" de "+totalLaps, car2.getX()+70, car2.getY()+alturaTexto+15);
+        bitmapFont.draw(batch,"VOLTA" + "     " + car1Lap + " de "+totalLaps, car2.getX()+50, car2.getY()+alturaTexto+15);
 
         if(car1.getFinished()){
-            bitmapFont.draw(batch,"CAR 1 FINISHED "+car1.getFormattedEndPos()+"!",car2.getX()-15, car2.getY());
+            bitmapFont.draw(batch,"CAR 1 FINISHED " + car1.getFormattedEndPos() + "!",car2.getX()-15, car2.getY());
         }
         //printNameTag(car1,NameTAG2);
-
         batch.end();
         // *** END BATCH CAR 2 ***
 
         batch.setProjectionMatrix(camera.combined);
 
-
         car1.update(delta,car2); // UPDATE CARS POSITIONS
         car2.update(delta,car1); // '                   '
+
+        // Aqui a ideia é trocar de tela quando os dois terminam a corrida
+        // Coloquei || no if pra testes
+        // Tem que pular pra ScoreboardScreen()
+//        if(car1.getFinished()||car2.getFinished()){
+//            this.music.stop();
+//            MyGdxGame.ref.setScreen(new ScoreboardScreen());
+//            this.dispose();
+//        }
     }
 
     private void checkFinishedRacers() {
@@ -278,8 +283,6 @@ public class MainScreen implements Screen {
         car2_img.dispose();
         img2.dispose();
     }
-
-
 
     public void printNameTag(Car car,String name){
         bitmapFont.draw(batch, "" + name, car.getX()-car.getWidth()/2, car.getY()+car.getHeight()+15);

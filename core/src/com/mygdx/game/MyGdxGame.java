@@ -24,10 +24,4 @@ public class MyGdxGame extends Game {
 	public void dispose() {
 
 	}
-
-	public void setGameScreen(){
-		Screen s = this.getScreen();
-		MyGdxGame.ref.setScreen(new MainScreen());
-		s.dispose();
-	}
 }
