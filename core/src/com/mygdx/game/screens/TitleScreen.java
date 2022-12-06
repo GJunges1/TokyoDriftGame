@@ -5,10 +5,13 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
+import com.badlogic.gdx.graphics.Camera;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.ScreenUtils;
+import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.mygdx.game.MyGdxGame;
 import com.mygdx.game.MyMultiplexer;
 import com.mygdx.game.button.StartButton;
@@ -25,6 +28,8 @@ public class TitleScreen implements Screen {
     StartButtonController startButtonController;
     static Music music;
     Sound sound;
+    private OrthographicCamera camera;
+    private FitViewport viewport;
 
 //    Car car1,car2;
 //    public TitleScreen(Car car1, Car car2){
@@ -41,7 +46,13 @@ public class TitleScreen implements Screen {
         multiplexer = new MyMultiplexer();
         startButtonController = new StartButtonController();
 
-        backGround = new Sprite(img, 0, 0, img.getWidth(), img.getHeight());
+        camera = new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+        viewport = new FitViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), camera);
+        viewport.setScreenBounds(0,0,Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+
+        backGround = new Sprite(img, 0, 0,img.getWidth(), img.getHeight());
+        camera.position.set(backGround.getX(),backGround.getY(),0);
+        camera.update();
 
         button = new StartButton(img2);
         button.setSize(601, 272);
@@ -62,6 +73,8 @@ public class TitleScreen implements Screen {
         ScreenUtils.clear(1, 0, 0, 1);
 
         batch.begin();
+        viewport.apply();
+
         backGround.draw(batch);
         button.draw(batch);
         batch.end();
@@ -101,5 +114,7 @@ public class TitleScreen implements Screen {
         batch.dispose();
         img.dispose();
         img2.dispose();
+        music.dispose();
+        sound.dispose();
     }
 }

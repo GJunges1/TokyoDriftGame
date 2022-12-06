@@ -5,11 +5,14 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.utils.ScreenUtils;
+import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.mygdx.game.MyGdxGame;
 import com.mygdx.game.MyMultiplexer;
 import com.mygdx.game.button.StartButton;
@@ -24,6 +27,8 @@ public class ScoreboardScreen implements Screen {
     Sound sound;
     BitmapFont bitmapFont;
     Car car1,car2;
+    private FitViewport viewport;
+    private OrthographicCamera camera;
 
     public ScoreboardScreen(Car car1, Car car2){
         this.car1 = car1;
@@ -35,8 +40,13 @@ public class ScoreboardScreen implements Screen {
         batch = new SpriteBatch();
         img = new Texture("ScoreboardScreen.png");
         img2 = new Texture("ContinueButton.png");
-
+        
+        camera = new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+        viewport = new FitViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), camera);
+        viewport.setScreenBounds(0,0,Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+        
         backGround = new Sprite(img, 0, 0, img.getWidth(), img.getHeight());
+        backGround.setSize(Gdx.graphics.getWidth(),Gdx.graphics.getHeight());
 
         button = new StartButton(img2);
         button.setSize(293, 100);
@@ -58,6 +68,8 @@ public class ScoreboardScreen implements Screen {
         ScreenUtils.clear(1, 0, 0, 1);
 
         batch.begin();
+        viewport.apply();
+        
         backGround.draw(batch);
         button.draw(batch);
 
@@ -111,6 +123,10 @@ public class ScoreboardScreen implements Screen {
 
     @Override
     public void dispose() {
-
+        batch.dispose();
+        img.dispose();
+        img2.dispose();
+        sound.dispose();
+        bitmapFont.dispose();
     }
 }

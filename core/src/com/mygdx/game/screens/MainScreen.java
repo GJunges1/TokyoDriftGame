@@ -179,7 +179,7 @@ public class MainScreen implements Screen {
         if(car2.getFinished()){
             bitmapFont.draw(batch,"" + car2.getNameTag() + " TERMINOU " + car2.getFormattedEndPos() + "!",car1.getX()-15, car1.getY());
         }
-        printNameTag(car1,this.NameTAG1);
+        printNameTag(car1,this.NameTAG2);
 
         batch.end();
         // *** END BATCH CAR 1 ***
@@ -208,7 +208,7 @@ public class MainScreen implements Screen {
         if(car1.getFinished()){
             bitmapFont.draw(batch,"" + car1.getNameTag() + " TERMINOU " + car1.getFormattedEndPos() + "!",car2.getX()-15, car2.getY());
         }
-        printNameTag(car2,this.NameTAG2);
+        printNameTag(car2,this.NameTAG1);
 
         batch.end();
         // *** END BATCH CAR 2 ***
@@ -220,7 +220,11 @@ public class MainScreen implements Screen {
 
         // Aqui a ideia é trocar de tela quando os dois terminam a corrida
         // Tem que pular pra ScoreboardScreen()
-        if(car1.getFinished() || car2.getFinished()){
+        checkRaceEnded();
+    }
+
+    private void checkRaceEnded() {
+        if(car1.getFinished() && car2.getFinished()){
             this.music.stop();
             MyGdxGame.ref.setScreen(new ScoreboardScreen(car1,car2));
             this.dispose();
@@ -279,6 +283,13 @@ public class MainScreen implements Screen {
     public void dispose() {
         car1_img.dispose();
         car2_img.dispose();
+        car1Braking_img.dispose();
+        car2Braking_img.dispose();
+        batch.dispose();
+        music.dispose();
+        bitmapFont.dispose();
+        tiledmap.dispose();
+        orthogonalTiledMapRenderer.dispose();
     }
 
     public void printNameTag(Car car,String name){
