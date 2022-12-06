@@ -23,7 +23,12 @@ public class ScoreboardScreen implements Screen {
     SpriteBatch batch;
     Sound sound;
     BitmapFont bitmapFont;
-    //static Car car1,car2;
+    Car car1,car2;
+
+    public ScoreboardScreen(Car car1, Car car2){
+        this.car1 = car1;
+        this.car2 = car2;
+    }
 
     @Override
     public void show() {
@@ -56,13 +61,24 @@ public class ScoreboardScreen implements Screen {
         backGround.draw(batch);
         button.draw(batch);
 
-        bitmapFont.draw(batch,"1st", Gdx.graphics.getWidth()/2-430, Gdx.graphics.getHeight()/2+20);
-        bitmapFont.draw(batch,"NOME 1",Gdx.graphics.getWidth()/2-40, Gdx.graphics.getHeight()/2+20);
-        bitmapFont.draw(batch,"TEMPO 1", Gdx.graphics.getWidth()/2+280, Gdx.graphics.getHeight()/2+20);
+        if(car1.getTotalSEC()<car2.getTotalSEC()){
+            bitmapFont.draw(batch,"1st",  Gdx.graphics.getWidth()/2-430, Gdx.graphics.getHeight()/2+20);
+            bitmapFont.draw(batch,"" + car1.getNameTag(),Gdx.graphics.getWidth()/2-40, Gdx.graphics.getHeight()/2+20);
+            bitmapFont.draw(batch,"" + car1.formatTimeScoreboard() , Gdx.graphics.getWidth()/2+280, Gdx.graphics.getHeight()/2+20);
 
-        bitmapFont.draw(batch,"2st", Gdx.graphics.getWidth()/2-430, Gdx.graphics.getHeight()/2-65);
-        bitmapFont.draw(batch,"NOME 2",Gdx.graphics.getWidth()/2-40, Gdx.graphics.getHeight()/2-65);
-        bitmapFont.draw(batch,"TEMPO 2", Gdx.graphics.getWidth()/2+280, Gdx.graphics.getHeight()/2-65);
+            bitmapFont.draw(batch,"2st", Gdx.graphics.getWidth()/2-430, Gdx.graphics.getHeight()/2-65);
+            bitmapFont.draw(batch,"" + car2.getNameTag(),Gdx.graphics.getWidth()/2-40, Gdx.graphics.getHeight()/2-65);
+            bitmapFont.draw(batch,"" + car2.formatTimeScoreboard(), Gdx.graphics.getWidth()/2+280, Gdx.graphics.getHeight()/2-65);
+        }
+        else{
+            bitmapFont.draw(batch,"1st",  Gdx.graphics.getWidth()/2-430, Gdx.graphics.getHeight()/2+20);
+            bitmapFont.draw(batch,"" + car2.getNameTag(),Gdx.graphics.getWidth()/2-40, Gdx.graphics.getHeight()/2+20);
+            bitmapFont.draw(batch,"" + car2.formatTimeScoreboard() , Gdx.graphics.getWidth()/2+280, Gdx.graphics.getHeight()/2+20);
+
+            bitmapFont.draw(batch,"2nd", Gdx.graphics.getWidth()/2-430, Gdx.graphics.getHeight()/2-65);
+            bitmapFont.draw(batch,"" + car1.getNameTag(),Gdx.graphics.getWidth()/2-40, Gdx.graphics.getHeight()/2-65);
+            bitmapFont.draw(batch,"" + car1.formatTimeScoreboard(), Gdx.graphics.getWidth()/2+280, Gdx.graphics.getHeight()/2-65);
+        }
 
         batch.end();
 

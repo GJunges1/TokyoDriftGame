@@ -430,6 +430,14 @@ public class Car extends Sprite {
         return result;
     }
 
+    public String formatTimeScoreboard(){
+        long sec = totalSEC % 60;
+        long min = (totalSEC % 3600) / 60;
+        long hours = totalSEC / 3600;
+        String result = String.format("%02d.%02d.%02d",hours, min, sec);
+        return result;
+    }
+
     public void setFinalPosition(int finalPosition) {
         this.finalPosition = finalPosition;
     }

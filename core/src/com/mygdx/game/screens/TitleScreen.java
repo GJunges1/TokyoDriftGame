@@ -13,6 +13,7 @@ import com.mygdx.game.MyGdxGame;
 import com.mygdx.game.MyMultiplexer;
 import com.mygdx.game.button.StartButton;
 import com.mygdx.game.button.StartButtonController;
+import com.mygdx.game.car.Car;
 
 public class TitleScreen implements Screen {
     Texture img, img2;
@@ -24,6 +25,12 @@ public class TitleScreen implements Screen {
     StartButtonController startButtonController;
     static Music music;
     Sound sound;
+
+//    Car car1,car2;
+//    public TitleScreen(Car car1, Car car2){
+//        this.car1 = car1;
+//        this.car2 = car2;
+//    }
 
     @Override
     public void show() {
@@ -63,7 +70,8 @@ public class TitleScreen implements Screen {
             this.music.stop();
             this.sound.play(0.3f);
             // Aqui tem que pular pra MainScreen()
-            MyGdxGame.ref.setScreen(new ScoreboardScreen()); //pula pra Scoreboard Screen, somente para testes
+            //MyGdxGame.ref.setScreen(new ScoreboardScreen(car1,car2)); //pula pra Scoreboard Screen, somente para testes
+            MyGdxGame.ref.setScreen(new MainScreen());
             this.dispose();
         }
     }

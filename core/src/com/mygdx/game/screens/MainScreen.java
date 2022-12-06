@@ -23,7 +23,7 @@ import helper.TileMapHelper;
 
 public class MainScreen implements Screen {
     public static MainScreen ref;
-    public static Texture car1_img, img2, car2_img, car1Braking_img, car2Braking_img;
+    public static Texture car1_img, car2_img, car1Braking_img, car2Braking_img;
     OrthographicCamera camera;
     SpriteBatch batch;
     public static Car car1,car2;
@@ -82,8 +82,8 @@ public class MainScreen implements Screen {
         checkpointLayers[1] = (TiledMapTileLayer) tiledmap.getLayers().get("CHECKPOINT1");
         checkpointLayers[2] = (TiledMapTileLayer) tiledmap.getLayers().get("CHECKPOINT2");
 
-        //circuit = new Circuit(img2, 0, 0, img2.getWidth(), img2.getHeight());
-        //circuit.setSize(circuit.getWidth(),circuit.getHeight());
+        this.NameTAG1 = "daniel";
+        this.NameTAG2 = "junges";
 
         car1 = new Car(car1_img,car1Braking_img, 0, 0, car1_img.getWidth(), car1_img.getHeight(),
                 800,
@@ -91,7 +91,7 @@ public class MainScreen implements Screen {
                 400,
                 100,
                 false,
-                "daniel",
+                this.NameTAG1,
                 (TiledMapTileLayer) tiledmap.getLayers().get("PAREDE"),
                 checkpointLayers);
         car2 = new Car(car2_img, car2Braking_img, 0, 0, car2_img.getWidth(), car2_img.getHeight(),
@@ -100,7 +100,7 @@ public class MainScreen implements Screen {
                 400,
                 100,
                 true,
-                "junges",
+                this.NameTAG2,
                 (TiledMapTileLayer) tiledmap.getLayers().get("PAREDE"),
                 checkpointLayers);
 
@@ -123,14 +123,11 @@ public class MainScreen implements Screen {
         car2.setSize(car2.getWidth()/10,car2.getHeight()/10);
         car2.setOriginCenter();
 
-        NameTAG1 = "daniel";
-        NameTAG2 = "junges";
-
         // *** START MUSIC *** //
-        Music music = Gdx.audio.newMusic(Gdx.files.internal("tokyo_drift.wav"));
-        music.setVolume(0.3f);
-        music.setLooping(true);
-        music.play();
+        this.music = Gdx.audio.newMusic(Gdx.files.internal("tokyo_drift.wav"));
+        this.music.setVolume(0.3f);
+        this.music.setLooping(true);
+        this.music.play();
         // *** END MUSIC *** //
 
         // *** START FONT *** //
@@ -177,11 +174,12 @@ public class MainScreen implements Screen {
 
         // e voltas para o carro 2:
         bitmapFont.draw(batch,"VOLTA" + "     " + car2Lap + " de " + totalLaps, car1.getX()+50, car1.getY()+alturaTexto+15);
-        //printNameTag(car2,NameTAG1);
+
 
         if(car2.getFinished()){
-            bitmapFont.draw(batch,"CAR 2 FINISHED " + car2.getFormattedEndPos() + "!",car1.getX()-15, car1.getY());
+            bitmapFont.draw(batch,"" + car2.getNameTag() + " TERMINOU " + car2.getFormattedEndPos() + "!",car1.getX()-15, car1.getY());
         }
+        printNameTag(car1,this.NameTAG1);
 
         batch.end();
         // *** END BATCH CAR 1 ***
@@ -208,9 +206,10 @@ public class MainScreen implements Screen {
         bitmapFont.draw(batch,"VOLTA" + "     " + car1Lap + " de "+totalLaps, car2.getX()+50, car2.getY()+alturaTexto+15);
 
         if(car1.getFinished()){
-            bitmapFont.draw(batch,"CAR 1 FINISHED " + car1.getFormattedEndPos() + "!",car2.getX()-15, car2.getY());
+            bitmapFont.draw(batch,"" + car1.getNameTag() + " TERMINOU " + car1.getFormattedEndPos() + "!",car2.getX()-15, car2.getY());
         }
-        //printNameTag(car1,NameTAG2);
+        printNameTag(car2,this.NameTAG2);
+
         batch.end();
         // *** END BATCH CAR 2 ***
 
@@ -220,13 +219,12 @@ public class MainScreen implements Screen {
         car2.update(delta,car1); // '                   '
 
         // Aqui a ideia é trocar de tela quando os dois terminam a corrida
-        // Coloquei || no if pra testes
         // Tem que pular pra ScoreboardScreen()
-//        if(car1.getFinished()||car2.getFinished()){
-//            this.music.stop();
-//            MyGdxGame.ref.setScreen(new ScoreboardScreen());
-//            this.dispose();
-//        }
+        if(car1.getFinished() || car2.getFinished()){
+            this.music.stop();
+            MyGdxGame.ref.setScreen(new ScoreboardScreen(car1,car2));
+            this.dispose();
+        }
     }
 
     private void checkFinishedRacers() {
@@ -281,7 +279,6 @@ public class MainScreen implements Screen {
     public void dispose() {
         car1_img.dispose();
         car2_img.dispose();
-        img2.dispose();
     }
 
     public void printNameTag(Car car,String name){
