@@ -151,6 +151,7 @@ public class MainScreen implements Screen {
     public void render(float delta){
         int alturaTexto = 140;
 
+
         car1Lap = car1.getCarLap();
         car2Lap = car2.getCarLap();
         checkFinishedRacers();
@@ -177,7 +178,7 @@ public class MainScreen implements Screen {
 
 
         if(car2.getFinished()){
-            bitmapFont.draw(batch,"" + car2.getNameTag() + " TERMINOU " + car2.getFormattedEndPos() + "!",car1.getX()-15, car1.getY());
+            bitmapFont.draw(batch,"" + car2.getNameTag() + " TERMINOU!",car1.getX()/2, car1.getY());
         }
         printNameTag(car1,this.NameTAG2);
 
@@ -206,7 +207,7 @@ public class MainScreen implements Screen {
         bitmapFont.draw(batch,"VOLTA" + "     " + car1Lap + " de "+totalLaps, car2.getX()+50, car2.getY()+alturaTexto+15);
 
         if(car1.getFinished()){
-            bitmapFont.draw(batch,"" + car1.getNameTag() + " TERMINOU " + car1.getFormattedEndPos() + "!",car2.getX()-15, car2.getY());
+            bitmapFont.draw(batch,"" + car1.getNameTag() + " TERMINOU!",car2.getX()/2, car2.getY());
         }
         printNameTag(car2,this.NameTAG1);
 
@@ -218,11 +219,11 @@ public class MainScreen implements Screen {
         car1.update(delta,car2); // UPDATE CARS POSITIONS
         car2.update(delta,car1); // '                   '
 
-        // Aqui a ideia é trocar de tela quando os dois terminam a corrida
-        // Tem que pular pra ScoreboardScreen()
         checkRaceEnded();
     }
 
+    // Aqui a ideia é trocar de tela quando os dois terminam a corrida
+    // Tem que pular pra ScoreboardScreen()
     private void checkRaceEnded() {
         if(car1.getFinished() && car2.getFinished()){
             this.music.stop();
