@@ -94,8 +94,8 @@ public class MainScreen implements Screen {
         checkpointLayers[1] = (TiledMapTileLayer) tiledmap.getLayers().get("CHECKPOINT1");
         checkpointLayers[2] = (TiledMapTileLayer) tiledmap.getLayers().get("CHECKPOINT2");
 
-        this.NameTAG1 = "daniel";
-        this.NameTAG2 = "junges";
+        this.NameTAG1 = "jogador 1";
+        this.NameTAG2 = "jogador 2";
 
         car1 = new Car(car1_img,car1Braking_img, 0, 0, car1_img.getWidth(), car1_img.getHeight(),
                 800,
