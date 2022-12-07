@@ -155,7 +155,7 @@ public class MainScreen implements Screen {
         car2Lap = car2.getCarLap();
         checkFinishedRacers();
 
-        ScreenUtils.clear(Color.GREEN);
+        ScreenUtils.clear(Color.BLACK);
 
         // *** START BATCH CAR 1 ***
         batch.begin();
@@ -167,53 +167,48 @@ public class MainScreen implements Screen {
 
         car1.draw(batch, delta);
         car2.draw(batch, delta);
-        batch.setProjectionMatrix(camera.combined);
 
         // imprimindo tempo para o carro 2:
-        bitmapFont.draw(batch, car2.formatTime(), car1.getX()+36, car1.getY()+30+alturaTexto);
+        bitmapFont.draw(batch, car2.formatTime(), car2.getX()+36, car2.getY()+30+alturaTexto);
 
         // e voltas para o carro 2:
-        bitmapFont.draw(batch,"VOLTA" + "     " + car2Lap + " de " + totalLaps, car1.getX()+50, car1.getY()+alturaTexto+15);
+        bitmapFont.draw(batch,"VOLTA" + "     " + car2Lap + " de " + totalLaps, car2.getX()+50, car2.getY()+alturaTexto+15);
 
 
         if(car2.getFinished()){
-            bitmapFont.draw(batch,"" + car2.getNameTag() + " TERMINOU " + car2.getFormattedEndPos() + "!",car1.getX()-15, car1.getY());
+            bitmapFont.draw(batch,"" + car2.getNameTag() + " TERMINOU " + car2.getFormattedEndPos() + "!",car2.getX()-15, car2.getY());
         }
-        printNameTag(car1,this.NameTAG2);
+        printNameTag(car2,this.NameTAG2);
 
         batch.end();
         // *** END BATCH CAR 1 ***
 
-        batch.setProjectionMatrix(camera.combined);
 
         // *** START BATCH CAR 2 ***
         batch.begin();
-        this.update();
 
         carViewport2.apply();
+        this.update();
         camera.position.set(car2.getX(),car2.getY(),0);
         camera.update();
         orthogonalTiledMapRenderer.render();
 
         car2.draw(batch, delta);
         car1.draw(batch, delta);
-        batch.setProjectionMatrix(camera.combined);
 
         // imprimindo tempo para o carro 1:
-        bitmapFont.draw(batch, car1.formatTime(), car2.getX()+36, car2.getY()+30+alturaTexto);
+        bitmapFont.draw(batch, car1.formatTime(), car1.getX()+36, car1.getY()+30+alturaTexto);
 
         // e voltas para o carro 2:
-        bitmapFont.draw(batch,"VOLTA" + "     " + car1Lap + " de "+totalLaps, car2.getX()+50, car2.getY()+alturaTexto+15);
+        bitmapFont.draw(batch,"VOLTA" + "     " + car1Lap + " de "+totalLaps, car1.getX()+50, car1.getY()+alturaTexto+15);
 
         if(car1.getFinished()){
-            bitmapFont.draw(batch,"" + car1.getNameTag() + " TERMINOU " + car1.getFormattedEndPos() + "!",car2.getX()-15, car2.getY());
+            bitmapFont.draw(batch,"" + car1.getNameTag() + " TERMINOU " + car1.getFormattedEndPos() + "!",car1.getX()-15, car1.getY());
         }
-        printNameTag(car2,this.NameTAG1);
+        printNameTag(car1,this.NameTAG1);
 
         batch.end();
         // *** END BATCH CAR 2 ***
-
-        batch.setProjectionMatrix(camera.combined);
 
         car1.update(delta,car2); // UPDATE CARS POSITIONS
         car2.update(delta,car1); // '                   '
