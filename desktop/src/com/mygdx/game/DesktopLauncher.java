@@ -1,5 +1,6 @@
 package com.mygdx.game;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
 
@@ -11,6 +12,7 @@ public class DesktopLauncher {
 		config.useVsync(false);
 		config.setTitle("Tokyo Drift");
 		config.setWindowedMode(1368, 720);
+		config.setWindowIcon("icon.png");
 		new Lwjgl3Application(new MyGdxGame(), config);
 	}
 }
