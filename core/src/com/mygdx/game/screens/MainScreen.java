@@ -87,7 +87,7 @@ public class MainScreen implements Screen {
 
         // *** END VIEWPORT *** //
 
-        this.tiledmap = new TmxMapLoader().load("core/src/map/map.tmx");
+        this.tiledmap = new TmxMapLoader().load("map/map.tmx");
 
         checkpointLayers = new TiledMapTileLayer[3];
         checkpointLayers[0] = (TiledMapTileLayer) tiledmap.getLayers().get("CHEGADA");
