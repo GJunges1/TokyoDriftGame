@@ -13,7 +13,6 @@ public class DesktopLauncher {
 		config.setTitle("Tokyo Drift");
 		config.setWindowedMode(1368, 720);
 		config.setWindowIcon("icon.png");
-		System.out.println("DESKTOP");
 		new Lwjgl3Application(new MyGdxGame(), config);
 	}
 }
