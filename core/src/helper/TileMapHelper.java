@@ -13,7 +13,7 @@ public class TileMapHelper {
     }
 
     public OrthogonalTiledMapRenderer setupMap(){
-        tiledmap = new TmxMapLoader().load("core/src/map/map.tmx");
+        tiledmap = new TmxMapLoader().load("map/map.tmx");
         return new OrthogonalTiledMapRenderer(tiledmap);
     }
 }
